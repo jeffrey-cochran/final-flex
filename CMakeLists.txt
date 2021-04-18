@@ -21,12 +21,6 @@ if (USE_ADDRESS_SANITIZER_RELEASE)
 	set (CMAKE_LINKER_FLAGS_RELWITHDEBINFO "${CMAKE_LINKER_FLAGS_RELWITHDEBINFO} -fno-omit-frame-pointer -fsanitize=address")
 endif()
 
-include(ExternalProject)
-set(EXTERNAL_PROJECTS_PREFIX ${CMAKE_BINARY_DIR}/external)
-set(EXTERNAL_PROJECTS_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/installed)
-
-option(PSIM_ENABLE_VISUALIZER "Build the visualizer" ON)
-
 # set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
@@ -34,23 +28,44 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 # Common functions
 include(cmake/common_functions.cmake)
 
-# Core libraries
 
+#
+# Core libraries
+# ==============
 # Threads
 find_package(Threads REQUIRED)
 
 # Eigen 3
 find_package(Eigen3 REQUIRED NO_MODULE)
 
-add_library(psim_std_dep INTERFACE)
-target_link_libraries(psim_std_dep INTERFACE Eigen3::Eigen Threads::Threads)
+add_library(final_flex_dep INTERFACE)
+target_link_libraries(final_flex_dep INTERFACE Eigen3::Eigen Threads::Threads)
 
-# Header only LibIGL
-target_include_directories(psim_std_dep SYSTEM INTERFACE ${CMAKE_SOURCE_DIR}/third-party/libigl/include/)
+# Box 2D
+add_subdirectory(third-party/box2d/)
 
-# Tetgen
-add_subdirectory(third-party/tetgen/)
+# SFML
+add_subdirectory(third-party/SFML/)
+
+# Core libraries
+# add_subdirectory(lib)
 
 
-add_subdirectory(lib)
-add_subdirectory(src)
+#
+# Executable declaration
+add_executable(final_flex main.cpp)
+target_include_directories(final_flex BEFORE PRIVATE ${CMAKE_CURRENT_LIST_DIR})
+target_include_directories(final_flex PUBLIC "${PROJECT_BINARY_DIR}")
+
+#
+# Box2D
+# target_include_directories(final_flex PUBLIC "${CMAKE_CURRENT_LIST_DIR}/third-party/box2d/include/box2d")
+target_link_libraries(final_flex PUBLIC box2d)
+
+#
+# SFML
+target_link_libraries(final_flex PUBLIC sfml-graphics sfml-audio)
+
+#
+# Eigen / Threads
+target_link_libraries(final_flex PUBLIC final_flex_dep)
