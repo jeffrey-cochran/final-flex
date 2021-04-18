@@ -1,0 +1,6 @@
+[submodule "third-party/box2d"]
+	path = third-party/box2d
+	url = git@github.com:erincatto/box2d.git
+[submodule "third-party/SFML"]
+	path = third-party/SFML
+	url = git@github.com:SFML/SFML.git
