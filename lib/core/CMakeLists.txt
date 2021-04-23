@@ -29,4 +29,5 @@
 # endif ()
 # set_relative_rpath(psim)
 
-target_sources(final_flex PUBLIC particle.cpp)
+
+add_subdirectory(pbd)

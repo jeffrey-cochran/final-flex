@@ -28,5 +28,3 @@
 # 	target_compile_definitions(psim PUBLIC PSIM_ENABLE_VISUALIZER=0)
 # endif ()
 # set_relative_rpath(psim)
-
-target_sources(final_flex PUBLIC particle.cpp)

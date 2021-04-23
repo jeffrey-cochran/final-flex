@@ -28,6 +28,11 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 # Common functions
 include(cmake/common_functions.cmake)
 
+#
+# Local Libraries
+# ===============
+include_directories(${CMAKE_SOURCE_DIR}/lib/core/pbd)
+
 
 #
 # Core libraries
@@ -41,26 +46,22 @@ find_package(Eigen3 REQUIRED NO_MODULE)
 add_library(final_flex_dep INTERFACE)
 target_link_libraries(final_flex_dep INTERFACE Eigen3::Eigen Threads::Threads)
 
-# Box 2D
-add_subdirectory(third-party/box2d/)
+# Box2d
+find_package(Box2D REQUIRED)
 
 # SFML
 add_subdirectory(third-party/SFML/)
 
-# Core libraries
-# add_subdirectory(lib)
-
-
 #
 # Executable declaration
 add_executable(final_flex main.cpp)
+
 target_include_directories(final_flex BEFORE PRIVATE ${CMAKE_CURRENT_LIST_DIR})
 target_include_directories(final_flex PUBLIC "${PROJECT_BINARY_DIR}")
-
+target_sources(final_flex PUBLIC ${CMAKE_CURRENT_LIST_DIR}/particle.cpp)
 #
 # Box2D
-# target_include_directories(final_flex PUBLIC "${CMAKE_CURRENT_LIST_DIR}/third-party/box2d/include/box2d")
-target_link_libraries(final_flex PUBLIC box2d)
+target_link_libraries(final_flex PUBLIC Box2D)
 
 #
 # SFML
