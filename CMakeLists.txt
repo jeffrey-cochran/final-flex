@@ -46,9 +46,6 @@ find_package(Eigen3 REQUIRED NO_MODULE)
 add_library(final_flex_dep INTERFACE)
 target_link_libraries(final_flex_dep INTERFACE Eigen3::Eigen Threads::Threads)
 
-# Box2d
-find_package(Box2D REQUIRED)
-
 # SFML
 add_subdirectory(third-party/SFML/)
 
@@ -59,9 +56,11 @@ add_executable(final_flex main.cpp)
 target_include_directories(final_flex BEFORE PRIVATE ${CMAKE_CURRENT_LIST_DIR})
 target_include_directories(final_flex PUBLIC "${PROJECT_BINARY_DIR}")
 target_sources(final_flex PUBLIC ${CMAKE_CURRENT_LIST_DIR}/particle.cpp)
+
 #
 # Box2D
-target_link_libraries(final_flex PUBLIC Box2D)
+target_include_directories(final_flex PUBLIC $ENV{BOX2D_INCLUDE_DIR})
+target_link_libraries(final_flex PRIVATE $ENV{BOX2D_LIB})
 
 #
 # SFML
