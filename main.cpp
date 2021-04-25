@@ -1,6 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include "particle.h"
-#include "Box2D/Box2D.h"
+#include <Box2D/Box2D.h>
 #include <iostream>
 
 int main()
