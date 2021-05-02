@@ -56,6 +56,7 @@ add_executable(final_flex main.cpp)
 target_include_directories(final_flex BEFORE PRIVATE ${CMAKE_CURRENT_LIST_DIR})
 target_include_directories(final_flex PUBLIC "${PROJECT_BINARY_DIR}")
 target_sources(final_flex PUBLIC ${CMAKE_CURRENT_LIST_DIR}/particle.cpp)
+target_sources(final_flex PUBLIC ${CMAKE_CURRENT_LIST_DIR}/utils.cpp)
 
 #
 # Box2D
