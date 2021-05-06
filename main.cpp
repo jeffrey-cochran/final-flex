@@ -1,7 +1,9 @@
 #include <SFML/Graphics.hpp>
 #include "blob.hpp"
+#include "SphereBVH.hpp"
 #include "particle.h"
 #include "Box2D/Box2D.h"
+#include "params.hpp"
 #include <iostream>
 
 
@@ -9,8 +11,15 @@ int main()
 {
     //
     // Create world
-    b2Vec2 gravity(0.0f, -0.1f);
+    b2Vec2 gravity(0.0f, 0.0f);
     b2World world(gravity);
+
+    //
+    // Set simulation parameters
+    float timeStep = 1.0f / 600.f;
+    float strain_compliance = 0.0001;
+    params::setTimeStep(timeStep);
+    params::setStrainCompliance(strain_compliance);
 
     b2BodyDef groundBodyDef;
     groundBodyDef.position.Set(0.0f, -10.0f);
@@ -45,13 +54,14 @@ int main()
         sf::Color::Magenta,
         30, 
         30, 
-        0.3, 
+        .2, 
         center_of_mass
     );
     
-    float timeStep = 1.0f / 600.f;
     int32 velocityIterations = 6;
     int32 positionIterations = 2;
+
+    my_blob.fix(0);
 
     sf::Clock clock; // starts the clock
     while (main_window->isOpen())
@@ -64,10 +74,14 @@ int main()
         }
 
         main_window->clear();
+        
         world.Step(timeStep, velocityIterations, positionIterations);
-        my_blob.Draw(main_window);
-        main_window->draw(ground);
+
         my_blob.update();
+        my_blob.solve_constraints();
+        my_blob.Draw(main_window);
+
+        main_window->draw(ground);
         main_window->display();
     }
     sf::Time elapsed1 = clock.getElapsedTime();

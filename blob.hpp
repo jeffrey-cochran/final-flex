@@ -7,6 +7,11 @@
 #include <vector>
 #include "Box2D/Box2D.h"
 #include "particle.h"
+#include "SphereBVH.hpp"
+#include "StrainLink.hpp"
+#include <SFML/Graphics.hpp>
+#include <Eigen/Dense>
+#include <Eigen/Sparse>
 
 // MIT License
 
@@ -29,11 +34,6 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-
-#include <vector>
-#include "Box2D/Box2D.h"
-#include <SFML/Graphics.hpp>
-
 
 class blob
 {
@@ -63,74 +63,42 @@ public:
 	//
 	// Attribute Access
 	std::vector<particle>& particles();
+	std::shared_ptr<particle> getParticle(int);
 
+	void fix(int k);
+	void fix(std::vector<int> kk);
+
+	void setColor(sf::Color);
+
+	void solve_constraints();
 
 //
 // Attributes
 private:
 	b2Vec2 position;
-    std::vector<particle> particles_;
-};
-
-inline blob::blob(
-	b2World& world,
-	sf::Color color,
-	int width, 
-	int height, 
-	float particles_per_unit_length, 
-	b2Vec2 center_of_mass
-)
-{
-	//
-	// Compute number of particles
-	int height_discretization = height * particles_per_unit_length;
-	int width_discretization = width * particles_per_unit_length;
-	int num_particles = height_discretization * width_discretization;
-    particles_.resize(num_particles);
+    std::vector<std::shared_ptr<particle>> particles_;
+	std::unordered_map<std::pair<int, int>, std::shared_ptr<StrainLink>> links_;
+	std::vector<int> fixed_paricles_;
+	Eigen::VectorXd lambdas;
+	Eigen::SparseMatrix<double> inv_mass;
+	float isotropic_stiffness;
+	std::shared_ptr<SphereNode> sphere_bvh;
 	
-	//
-	// Set center of mass
-	position.Set(center_of_mass.x, center_of_mass.y);
-
-	//
-	// Get particle attributes
-	float radius = 0.5 / (float)particles_per_unit_length;
-	float current_x = center_of_mass.x - ((float)width / 2.) + radius;
-	float current_y = center_of_mass.y + ((float)height / 2.) - radius;
-
-	std::cout << radius << std::endl;
-
-	for( int i = 0; i < width_discretization; i++ ) {
-		for( int j = 0; j < height_discretization; j++ ) {
-
-			//
-			// Create next particle
-			b2Vec2 center(
-				current_x + (2.*radius*j), 
-				current_y - (2.*radius*i)
-			);
-			particle p(
-				radius, 
-				i*height_discretization + j, 
-				center,
-				color,
-				world
-			);
-			particles_.emplace_back(p);
-		}
-	}  
-}
+};
 
 inline void blob::update(){
 	for (auto& p : particles_) {
-		p.update();
+		assert(p);
+		p->update();
 	}
 }
 
 inline void blob::Draw(std::shared_ptr<sf::RenderWindow> main_window){
 	for (auto& p : particles_) {
-		p.Draw(main_window);
+		assert(p);
+		p->Draw(main_window);
 	}
 }
+
 
 #endif
