@@ -6,6 +6,12 @@
 ////////////////////////////////////////////////////////////
 #include <vector>
 #include "Box2D/Box2D.h"
+#include "particle.h"
+#include "SphereBVH.hpp"
+#include "StrainLink.hpp"
+#include <SFML/Graphics.hpp>
+#include <Eigen/Dense>
+#include <Eigen/Sparse>
 
 // MIT License
 
@@ -29,49 +35,75 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#ifndef BLOB_H
-#define BLOB_H
-
-#include <vector>
-#include "Box2D/Box2D.h"
-
-/// A solid circle shape
-class blob : public b2Shape
+class blob
 {
+//
+// Methods
 public:
-	blob(int x);
 
-	blob* Clone(b2BlockAllocator* allocator) const override;
+	//
+	// Constructors
+	blob(
+		b2World& world,
+		sf::Color color,
+		int width, 
+		int height, 
+		float particles_per_unit_length, 
+		b2Vec2 center_of_mass
+	);
 
-	int32 GetChildCount() const override;
+	//
+	// Visualization
+	void Draw(std::shared_ptr<sf::RenderWindow> main_window);
 
-	/// Implement b2Shape.
-	bool TestPoint(const b2Transform& transform, const b2Vec2& p) const override;
+	//
+	// Dynamics
+	void update();
 
-	bool RayCast(b2RayCastOutput* output, const b2RayCastInput& input,
-				const b2Transform& transform, int32 childIndex) const override;
+	//
+	// Attribute Access
+	std::vector<particle> particles();
+	std::shared_ptr<particle> getParticle(int);
 
-	void ComputeAABB(b2AABB* aabb, const b2Transform& transform, int32 childIndex) const override;
+	void fix(int k);
+	void fix(std::vector<int> kk);
 
-	void ComputeMass(b2MassData* massData, float density) const override;
+	void applyForce(b2Vec2 force, int k);
+	void applyForce(b2Vec2 force, std::vector<int> kk);
 
-	void DrawParticle(int i);
+	void setColor(sf::Color);
 
-	void Draw();
+	void solve_constraints();
 
-	b2Vec2 m_p;
+//
+// Attributes
 private:
-    int dims;
-    std::vector<b2CircleShape> particles;
+	b2Vec2 position;
+    std::vector<std::shared_ptr<particle>> particles_;
+	std::map<std::pair<int, int>, std::shared_ptr<StrainLink>> links_;
+	std::vector<int> fixed_particles_;
+	std::vector<int> forced_particles_;
+	Eigen::VectorXd lambdas;
+	Eigen::SparseMatrix<double> inv_mass;
+	float isotropic_stiffness;
+	std::shared_ptr<SphereNode> sphere_bvh;
+	
 };
 
-inline blob::blob(int x)
-{
-    dims = x;
-	m_type = e_circle;
-	m_radius = 0.0f;
-	m_p.SetZero();
-    particles.resize(pow(dims,2));
+inline void blob::update(){
+	for (auto& p : particles_) {
+		assert(p);
+		p->update();
+	}
 }
+
+inline void blob::Draw(std::shared_ptr<sf::RenderWindow> main_window){
+
+	for (auto& p : particles_) {
+		assert(p);
+		p->Draw(main_window);
+	}
+}
+
 
 #endif

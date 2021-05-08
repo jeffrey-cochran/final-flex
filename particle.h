@@ -5,6 +5,7 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include "Box2D/Box2D.h"
+#include "utils.hpp"
 
 /// A solid circle shape
 class particle
@@ -13,7 +14,7 @@ class particle
         particle();
         particle(
             double radius, 
-            int idx, 
+            int index, 
             b2Vec2 pos, 
             sf::Color color,
             b2World&
@@ -21,59 +22,43 @@ class particle
         void Draw(std::shared_ptr<sf::RenderWindow> main_window);
         void update();
 
-    private:
-        int idx;
-        sf::CircleShape rendering_shape;
-        b2Body* body;
-        b2CircleShape physics_shape;
+        void setPosition(float x, float y);
+        void setPosition(b2Vec2 new_position);
+        void setFixedPosition(b2Vec2 new_position);
+        b2Vec2 getPosition();
+        b2Vec2 getPreviousPosition();
+        b2Vec2 getFixedPosition();
 
+        void setLinearVelocity(b2Vec2 new_velocity);
+        b2Vec2 getLinearVelocity();
+
+        float getRadius();
+
+        void setColor(sf::Color c);
+        void setIndex(int in_id);
+
+        void applyForce();
+        void addForce(b2Vec2 force);
+        int getIndex();
+
+        float invm;
+
+    private:
+        b2Body* body;
+        sf::CircleShape rendering_shape;
+        b2CircleShape physics_shape;
+        b2Vec2 current_position, previous_position, fixed_position;
+        b2Vec2 velocity;
+        std::vector<b2Vec2> forces;
+        int id;
 };
 
-inline particle::particle(){
-    this->idx = 0;
-    physics_shape.m_p = b2Vec2(0.,0.);
-    physics_shape.m_radius = 0.;
-    body = nullptr;
+inline float particle::getRadius(){
+    return this->rendering_shape.getRadius();
 }
 
-inline particle::particle(
-    double radius, 
-    int idx, 
-    b2Vec2 pos, 
-    sf::Color color,
-    b2World& world
-) {
-    idx = idx;
-
-    physics_shape.m_p = pos;
-    physics_shape.m_radius = radius;
-
-    this->rendering_shape.setRadius(radius);
-    this->rendering_shape.setPosition(pos.x, pos.y);
-    this->rendering_shape.setFillColor(color);
-
-    b2BodyDef bodyDef;
-    bodyDef.type = b2_dynamicBody;
-    bodyDef.position.Set(pos.x, pos.y);
-    this->body = world.CreateBody(&bodyDef);
-
-    b2FixtureDef fixtureDef;
-    fixtureDef.shape = &physics_shape;
-    fixtureDef.density = 1.0f;
-    fixtureDef.friction = 0.3f; 
-    fixtureDef.filter.groupIndex = -1;
-
-    this->body->CreateFixture(&fixtureDef);
-
-}
-
-inline void particle::update(){
-    if (this->body) {
-        b2Vec2  position = this->body->GetPosition();
-        this->rendering_shape.setPosition(position.x, position.y);
-        printf("%4.2f %4.2f\n", position.x, position.y);
-    }
-    // 
+inline void particle::setColor(sf::Color c) {
+    this->rendering_shape.setFillColor(c);
 }
 
 #endif
