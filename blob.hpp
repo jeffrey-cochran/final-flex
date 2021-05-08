@@ -62,11 +62,14 @@ public:
 
 	//
 	// Attribute Access
-	std::vector<particle>& particles();
+	std::vector<particle> particles();
 	std::shared_ptr<particle> getParticle(int);
 
 	void fix(int k);
 	void fix(std::vector<int> kk);
+
+	void applyForce(b2Vec2 force, int k);
+	void applyForce(b2Vec2 force, std::vector<int> kk);
 
 	void setColor(sf::Color);
 
@@ -77,8 +80,9 @@ public:
 private:
 	b2Vec2 position;
     std::vector<std::shared_ptr<particle>> particles_;
-	std::unordered_map<std::pair<int, int>, std::shared_ptr<StrainLink>> links_;
-	std::vector<int> fixed_paricles_;
+	std::map<std::pair<int, int>, std::shared_ptr<StrainLink>> links_;
+	std::vector<int> fixed_particles_;
+	std::vector<int> forced_particles_;
 	Eigen::VectorXd lambdas;
 	Eigen::SparseMatrix<double> inv_mass;
 	float isotropic_stiffness;
@@ -94,6 +98,7 @@ inline void blob::update(){
 }
 
 inline void blob::Draw(std::shared_ptr<sf::RenderWindow> main_window){
+
 	for (auto& p : particles_) {
 		assert(p);
 		p->Draw(main_window);

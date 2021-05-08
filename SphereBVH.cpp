@@ -19,6 +19,7 @@ SphereNode::SphereNode(){
 
 SphereNode::SphereNode(std::shared_ptr<particle> p){
     this->bounding_volume.loadFromParticle(p);
+
     this->index = p->getIndex();
     this->left_child = nullptr;
     this->right_child = nullptr;

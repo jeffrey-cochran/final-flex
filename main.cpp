@@ -3,7 +3,7 @@
 #include "SphereBVH.hpp"
 #include "particle.h"
 #include "Box2D/Box2D.h"
-#include "params.hpp"
+// #include "params.hpp"
 #include <iostream>
 
 
@@ -11,15 +11,19 @@ int main()
 {
     //
     // Create world
-    b2Vec2 gravity(0.0f, 0.0f);
+    b2Vec2 gravity(0.0f, -10.f);
     b2World world(gravity);
 
     //
     // Set simulation parameters
+    // std::cout << params::time_step << std::endl;
     float timeStep = 1.0f / 600.f;
-    float strain_compliance = 0.0001;
-    params::setTimeStep(timeStep);
-    params::setStrainCompliance(strain_compliance);
+    float strain_compliance = 0.;
+    // params::setStrainCompliance(strain_compliance);
+    // params::setTimeStep(timeStep);
+    // std::cout << params::time_step << std::endl;
+
+
 
     b2BodyDef groundBodyDef;
     groundBodyDef.position.Set(0.0f, -10.0f);
@@ -52,8 +56,8 @@ int main()
     blob my_blob(
         world,
         sf::Color::Magenta,
-        30, 
-        30, 
+        50, 
+        10, 
         .2, 
         center_of_mass
     );
@@ -62,6 +66,9 @@ int main()
     int32 positionIterations = 2;
 
     my_blob.fix(0);
+    my_blob.fix(1);
+    my_blob.applyForce(b2Vec2(0, -10000.), 18);
+    my_blob.applyForce(b2Vec2(0, -10000.), 19);
 
     sf::Clock clock; // starts the clock
     while (main_window->isOpen())

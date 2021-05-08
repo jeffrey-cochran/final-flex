@@ -1,9 +1,10 @@
-#include "blob.hpp"
 #include "particle.h"
+#include "blob.hpp"
 #include "StrainLink.hpp"
 #include <vector>
 #include <iostream>
 #include "Box2D/Box2D.h"
+// #include "params.hpp"
 
 
 blob::blob(
@@ -31,8 +32,6 @@ blob::blob(
 	float current_x = center_of_mass.x - ((float)width / 2.) + radius;
 	float current_y = center_of_mass.y + ((float)height / 2.) - radius;
 
-	int cnt = 0;
-
 	for( int i = 0; i < width_discretization; i++ ) {
 		for( int j = 0; j < height_discretization; j++ ) {
 
@@ -49,6 +48,8 @@ blob::blob(
 				color,
 				world
 			);
+
+
 			std::shared_ptr<particle> pp = std::make_shared<particle>(p);
 			particles_.push_back(
 				pp
@@ -63,7 +64,7 @@ blob::blob(
 
 	//
 	// Generate strain-links within sphere of influence
-	for( auto p : particles_ ) {
+	for( std::shared_ptr<particle> p : particles_ ) {
 
 		SphereNode sphere_of_influence(p);
 		sphere_of_influence.bounding_volume.radius *= 2.;
@@ -71,8 +72,8 @@ blob::blob(
 
 		for( int j : li ) {
 
-            StrainLink current_link(p, this->getParticle(j);
-            if this->links_.count(current_link.getId() == 0) {
+            StrainLink current_link(p, this->getParticle(j));
+            if( this->links_.count(current_link.getId()) == 0 ) {
                 this->links_.insert(
                     { current_link.getId(), std::make_shared<StrainLink>(current_link) }
                 );
@@ -86,16 +87,17 @@ void blob::solve_constraints() {
 
 	//
 	// Reset lambdas
-	for( const auto link : this->links_ ) {
-		link->resetLambda();
+	for( auto& link_pair : this->links_ ) {
+		link_pair.second->resetLambda();
 	}
 
-	for( int i = 0; i < params::constraint_iters; i++ ) {
-
+	int constraint_iters = 1;
+	for( int i = 0; i < constraint_iters; i++ ) {
+ 
 		//
 		// Solve fixture constraints
-		for( const auto i : this->fixed_paricles_ ) {
-			b2Vec2 original_position = this->particles_[i]->getOriginalPosition();
+		for( const auto i : this->fixed_particles_ ) {
+			b2Vec2 original_position = this->particles_[i]->getFixedPosition();
 			this->particles_[i]->setPosition(
 				original_position.x, original_position.y
 			);
@@ -103,23 +105,45 @@ void blob::solve_constraints() {
 
 		//
 		// Solve link constraints
-		for( const auto link : this->links_ ) {
-			link->update_position();
+		for( auto& link_pair : this->links_ ) {
+			link_pair.second->update_position();
 		}
 	}
 
+
 	//
 	// Update velocities
+	float inv_time_step = 600.;
 	for( const auto p : this->particles_ ) {
-		p->setLinearVelocity( params::inv_time_step * (p->getPosition() - p->getPreviousPosition());
+		p->setLinearVelocity( inv_time_step * (p->getPosition() - p->getPreviousPosition()) );
 	}
+
+	//
+	// Apply forces
+	for( int m : this->forced_particles_ ) {
+		this->getParticle(m)->applyForce();
+	}
+
+
+
 }
 
 void blob::fix(int k) {
-    this->fixed_paricles_.emplace_back(k);
+	this->particles_[k]->invm = 0.;
+	this->particles_[k]->setFixedPosition(this->particles_[k]->getPosition());
+    this->fixed_particles_.emplace_back(k);
+}
+
+void blob::applyForce(b2Vec2 force, int k) {
+	this->particles_[k]->addForce(force);
+	this->forced_particles_.emplace_back(k);
 }
 
 void blob::fix(std::vector<int> kk) {
-    this->fixed_paricles_.reserve(this->fixed_paricles_.size() + kk.size());
-    this->fixed_paricles_.insert(this->fixed_paricles_.end(), kk.begin(),kk.end());
+    this->fixed_particles_.reserve(this->fixed_particles_.size() + kk.size());
+    this->fixed_particles_.insert(this->fixed_particles_.end(), kk.begin(),kk.end());
+}
+
+std::shared_ptr<particle> blob::getParticle(int k) {
+	return  this->particles_[k];
 }

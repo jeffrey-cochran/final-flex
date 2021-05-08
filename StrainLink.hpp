@@ -15,9 +15,7 @@ class StrainLink
         StrainLink();
         StrainLink(
             std::shared_ptr<particle> in_particle_a,
-            std::shared_ptr<particle> in_particle_b,
-            float in_compliance,
-            float time_step
+            std::shared_ptr<particle> in_particle_b
         );
 
         void update();
@@ -26,6 +24,8 @@ class StrainLink
         void resetLambda();
         b2Vec2 getVector();
         std::pair<int,int> getId();
+        std::shared_ptr<particle> getParticleA();
+        std::shared_ptr<particle> getParticleB();
 
     private:
         std::shared_ptr<particle> particle_a;
