@@ -102,7 +102,7 @@ float StrainLink::update_position() {
     );
 
     //
-    return delta_lambda;
+    return this->getStrain();
 };
 
 std::pair<int,int> StrainLink::getId() {

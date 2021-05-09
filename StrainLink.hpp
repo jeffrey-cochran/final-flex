@@ -21,6 +21,7 @@ class StrainLink
         void update();
         float update_position();
         void update_orientation();
+        float getStrain();
         void resetLambda();
         b2Vec2 getVector();
         std::pair<int,int> getId();
@@ -41,6 +42,10 @@ inline StrainLink::StrainLink() {}
 
 inline void StrainLink::resetLambda() {
     this->lambda = 0.;
+}
+
+inline float StrainLink::getStrain() {
+    return log(this->getVector().Length() / this->rest_length);
 }
 
 #endif
