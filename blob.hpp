@@ -48,7 +48,7 @@ public:
 		sf::Color color,
 		int width, 
 		int height, 
-		float particles_per_unit_length, 
+		double particles_per_unit_length, 
 		b2Vec2 center_of_mass
 	);
 
@@ -87,7 +87,7 @@ private:
 	std::vector<int> forced_particles_;
 	Eigen::VectorXd lambdas;
 	Eigen::SparseMatrix<double> inv_mass;
-	float isotropic_stiffness;
+	double isotropic_stiffness;
 	std::shared_ptr<SphereNode> sphere_bvh;
 	
 };

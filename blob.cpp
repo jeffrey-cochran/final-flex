@@ -12,7 +12,7 @@ blob::blob(
 	sf::Color color,
 	int width, 
 	int height, 
-	float particles_per_unit_length, 
+	double particles_per_unit_length, 
 	b2Vec2 center_of_mass
 )
 {
@@ -28,9 +28,9 @@ blob::blob(
 
 	//
 	// Get particle attributes
-	float radius = 0.5 / (float)particles_per_unit_length;
-	float current_x = center_of_mass.x - ((float)width / 2.) + radius;
-	float current_y = center_of_mass.y + ((float)height / 2.) - radius;
+	double radius = 0.5 / (double)particles_per_unit_length;
+	double current_x = center_of_mass.x - ((double)width / 2.) + radius;
+	double current_y = center_of_mass.y + ((double)height / 2.) - radius;
 
 	for( int i = 0; i < width_discretization; i++ ) {
 		for( int j = 0; j < height_discretization; j++ ) {
@@ -112,17 +112,16 @@ void blob::solve_constraints() {
 
 		//
 		// Solve link constraints
-		float strain_proxy_threshold = 0.5;
-		float biggest_strain_proxy = 0.0;
+		double strain_proxy_threshold = 0.5;
+		double biggest_strain_proxy = 0.0;
 		std::vector<std::pair<int,int>> links_with_excessive_strain;
 		for( auto& link_pair : this->links_ ) {
-			float strain_proxy = link_pair.second->update_position();
+			double strain_proxy = link_pair.second->update_position();
 			biggest_strain_proxy = strain_proxy > biggest_strain_proxy ? strain_proxy : biggest_strain_proxy;
 			if( abs(strain_proxy) > strain_proxy_threshold ) {
 				links_with_excessive_strain.push_back(link_pair.first);
 			}			
 		}
-		std::cout << "STRAIN PROXY: " << biggest_strain_proxy << std::endl;
 
 		//
 		// Delete broken links
@@ -143,7 +142,7 @@ void blob::solve_constraints() {
 
 	//
 	// Update velocities
-	float inv_time_step = 600.;
+	double inv_time_step = 600000.;
 	for( const auto p : this->particles_ ) {
 		p->setLinearVelocity( inv_time_step * (p->getPosition() - p->getPreviousPosition()) );
 	}

@@ -75,7 +75,7 @@ std::vector<int> SphereNode::intersects(SphereNode& test_node) {
 bool SphereNode::intersects_(SphereNode& test_node) {
     bool intersects = this->contains(test_node) || test_node.contains(*this);
     if( !intersects ) {
-        float length = (this->bounding_volume.center - test_node.bounding_volume.center).Length();
+        double length = (this->bounding_volume.center - test_node.bounding_volume.center).Length();
         intersects = (length <= this->bounding_volume.radius + test_node.bounding_volume.radius);
     }
     return intersects;
@@ -88,12 +88,12 @@ void SphereNode::append_indices(std::vector<int>& target, std::vector<int>& sour
 }
 
 bool SphereNode::contains(SphereNode& test_node) {
-    float length = (this->bounding_volume.center - test_node.bounding_volume.center).Length();
+    double length = (this->bounding_volume.center - test_node.bounding_volume.center).Length();
     return (this->bounding_volume.radius - length >= test_node.bounding_volume.radius);
 }
 
 bool SphereNode::contains(std::shared_ptr<particle> p) {
-    float length = (this->bounding_volume.center - p->getPosition()).Length();
+    double length = (this->bounding_volume.center - p->getPosition()).Length();
     return (this->bounding_volume.radius - length >= p->getRadius());
 }
 

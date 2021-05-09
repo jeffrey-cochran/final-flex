@@ -33,24 +33,24 @@ void StrainLink::update() {
     this->update_position();
 }
 
-float StrainLink::update_position() {
+double StrainLink::update_position() {
 
-    float time_step = 1./600;
-    float inv_time_step = 600.;
-    float normalized_strain_compliance = 90.;
-    float linear_damping = 20.;
-    float normalized_beta = pow(time_step,2.) * linear_damping;
-    float gamma = normalized_beta * normalized_strain_compliance * inv_time_step;
+    double time_step = 1./600000.;
+    double inv_time_step = 600000.;
+    double normalized_strain_compliance = 30.;
+    double linear_damping = 60.;
+    double normalized_beta = pow(time_step,2.) * linear_damping;
+    double gamma = normalized_beta * normalized_strain_compliance * inv_time_step;
 
     //
     // Get magnitude and direction of perfect
     // correction to original length
     b2Vec2 direction = this->getVector();
-    float magnitude = direction.Length() - this->rest_length;
+    double magnitude = direction.Length() - this->rest_length;
     direction.Normalize();
     
 
-	// float linear_damping = 0.0005;
+	// double linear_damping = 0.0005;
 	// for( auto& link_pair : this->links_ ) {
 	// 	b2Vec2 prev_v_a =link_pair.second->getParticleA()->getLinearVelocity();
 	// 	b2Vec2 prev_v_b =link_pair.second->getParticleB()->getLinearVelocity();
@@ -75,7 +75,7 @@ float StrainLink::update_position() {
 
     //
     // Compute the change in the lagrange multiplier
-    float delta_lambda = -(
+    double delta_lambda = -(
         magnitude + normalized_strain_compliance * this->lambda - gamma*(delta.x + delta.y)
     ) / (
         (1. + gamma) * (this->particle_a->invm + this->particle_b->invm) + normalized_strain_compliance

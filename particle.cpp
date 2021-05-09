@@ -65,7 +65,7 @@ void particle::update(){
     // 
 }
 
-void particle::setPosition(float x, float y) {
+void particle::setPosition(double x, double y) {
 
     this->current_position.Set(x, y);
 
@@ -125,9 +125,7 @@ void particle::applyStrains() {
     if( this->strains.size() > 0 ) {
         b2Vec2 new_fixed_position = this->getFixedPosition();
         for( const auto& strain : this->strains ) {
-            std::cout << "BEFORE :" << new_fixed_position.y << std::endl;
             new_fixed_position += strain;
-            std::cout << "AFTER :" << new_fixed_position.y << std::endl;
         }
         this->setFixedPosition(new_fixed_position);
     }

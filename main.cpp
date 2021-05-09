@@ -17,8 +17,8 @@ int main()
     //
     // Set simulation parameters
     // std::cout << params::time_step << std::endl;
-    float timeStep = 1.0f / 600.f;
-    float strain_compliance = 0.;
+    double timeStep = 1.0f / 600000.f;
+    double strain_compliance = 0.;
     // params::setStrainCompliance(strain_compliance);
     // params::setTimeStep(timeStep);
     // std::cout << params::time_step << std::endl;
@@ -67,8 +67,8 @@ int main()
 
     my_blob.fix(0);
     my_blob.fix(1);
-    my_blob.applyStrain(b2Vec2(0, -.001), 18);
-    my_blob.applyStrain(b2Vec2(0, -.001), 19);
+    my_blob.applyStrain(b2Vec2(0, -.00005), 18);
+    my_blob.applyStrain(b2Vec2(0, -.00005), 19);
 
     sf::Clock clock; // starts the clock
     while (main_window->isOpen())
