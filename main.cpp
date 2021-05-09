@@ -67,8 +67,8 @@ int main()
 
     my_blob.fix(0);
     my_blob.fix(1);
-    my_blob.applyForce(b2Vec2(0, -10000.), 18);
-    my_blob.applyForce(b2Vec2(0, -10000.), 19);
+    my_blob.applyStrain(b2Vec2(0, -.001), 18);
+    my_blob.applyStrain(b2Vec2(0, -.001), 19);
 
     sf::Clock clock; // starts the clock
     while (main_window->isOpen())

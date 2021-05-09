@@ -38,8 +38,12 @@ class particle
         void setIndex(int in_id);
 
         void applyForce();
+        void applyStrains();
         void addForce(b2Vec2 force);
+        void addStrain(b2Vec2 strain_vector);
         int getIndex();
+
+        void clearStrains();
 
         float invm;
 
@@ -50,6 +54,7 @@ class particle
         b2Vec2 current_position, previous_position, fixed_position;
         b2Vec2 velocity;
         std::vector<b2Vec2> forces;
+        std::vector<b2Vec2> strains;
         int id;
 };
 
@@ -59,6 +64,10 @@ inline float particle::getRadius(){
 
 inline void particle::setColor(sf::Color c) {
     this->rendering_shape.setFillColor(c);
+}
+
+inline void particle::addStrain(b2Vec2 strain_vector) {
+    this->strains.push_back(strain_vector);
 }
 
 #endif

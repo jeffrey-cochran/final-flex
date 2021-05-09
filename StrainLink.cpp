@@ -33,12 +33,12 @@ void StrainLink::update() {
     this->update_position();
 }
 
-void StrainLink::update_position() {
+float StrainLink::update_position() {
 
     float time_step = 1./600;
     float inv_time_step = 600.;
     float normalized_strain_compliance = 90.;
-    float linear_damping = 10.;
+    float linear_damping = 20.;
     float normalized_beta = pow(time_step,2.) * linear_damping;
     float gamma = normalized_beta * normalized_strain_compliance * inv_time_step;
 
@@ -85,11 +85,6 @@ void StrainLink::update_position() {
     // Update lagrange multiplier
     this->lambda += delta_lambda;
 
-    int cnt = 0;
-    if( delta_lambda > 0.0 ) {
-        std::cout << ++cnt << std::endl;
-    }
-
     //
     // Compute impulse for correction
     b2Vec2 impulse = delta_lambda * direction;
@@ -107,7 +102,7 @@ void StrainLink::update_position() {
     );
 
     //
-    // void
+    return delta_lambda;
 };
 
 std::pair<int,int> StrainLink::getId() {

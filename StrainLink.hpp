@@ -19,7 +19,7 @@ class StrainLink
         );
 
         void update();
-        void update_position();
+        float update_position();
         void update_orientation();
         void resetLambda();
         b2Vec2 getVector();

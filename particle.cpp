@@ -121,6 +121,24 @@ void particle::addForce(b2Vec2 force) {
     this->forces.push_back(force);
 }
 
+void particle::applyStrains() {
+    if( this->strains.size() > 0 ) {
+        b2Vec2 new_fixed_position = this->getFixedPosition();
+        for( const auto& strain : this->strains ) {
+            std::cout << "BEFORE :" << new_fixed_position.y << std::endl;
+            new_fixed_position += strain;
+            std::cout << "AFTER :" << new_fixed_position.y << std::endl;
+        }
+        this->setFixedPosition(new_fixed_position);
+    }
+    //
+    // void
+}
+
+void particle::clearStrains() {
+    this->strains.clear();
+}
+
 void particle::applyForce() {
     for( const auto& force : this->forces ) {
         this->body->ApplyForceToCenter(force, true);

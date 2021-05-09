@@ -71,6 +71,8 @@ public:
 	void applyForce(b2Vec2 force, int k);
 	void applyForce(b2Vec2 force, std::vector<int> kk);
 
+	void applyStrain(b2Vec2 strain_vector, int k);
+
 	void setColor(sf::Color);
 
 	void solve_constraints();
