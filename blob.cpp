@@ -70,7 +70,13 @@ blob::blob(
 		sphere_of_influence.bounding_volume.radius *= 2.;
 		auto li = sphere_bvh->intersects(sphere_of_influence);
 
+		int p_index = p->getIndex();
 		for( int j : li ) {
+
+			//
+			// Don't let connected particles collide
+			this->getParticle(j)->addWhiteFlag(p_index);
+			p->addWhiteFlag(j);
 
             StrainLink current_link(p, this->getParticle(j));
             if( this->links_.count(current_link.getId()) == 0 ) {
@@ -128,15 +134,16 @@ void blob::solve_constraints() {
 		bool deletion_occurs = false;
 		if( links_with_excessive_strain.size() > 0 ) {
 			for( auto& key : links_with_excessive_strain ) {
+
+				//
+				// Allow them to collide once separated
+				this->links_.at(key)->getParticleA()->removeWhiteFlag(this->links_.at(key)->getParticleB()->getIndex())
+				this->links_.at(key)->getParticleB()->removeWhiteFlag(this->links_.at(key)->getParticleA()->getIndex())
+
 				this->links_.erase(key);
 			}
 			deletion_occurs = true;
 		}
-		// if( deletion_occurs ) {
-		// 	for( auto& p : this->particles_ ) {
-		// 		p->clearStrains();
-		// 	}
-		// }
 	}
 
 
@@ -180,4 +187,15 @@ void blob::fix(std::vector<int> kk) {
 
 std::shared_ptr<particle> blob::getParticle(int k) {
 	return  this->particles_[k];
+}
+
+bool b2ContactFilter::ShouldCollide( b2Fixture* fixtureA, b2Fixture* fixtureB ) {
+	auto fix_a_data = fixtureA->GetUserData();
+	auto fix_b_data = fixtureB->GetUserData();
+
+	return (
+		fix_a_data.pairings.count(fix_b_data.index) == 0
+	) || (
+		fix_b_data.pairings.count(fix_a_data.index) == 0
+	);
 }

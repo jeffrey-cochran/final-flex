@@ -89,7 +89,6 @@ private:
 	Eigen::SparseMatrix<double> inv_mass;
 	double isotropic_stiffness;
 	std::shared_ptr<SphereNode> sphere_bvh;
-	
 };
 
 inline void blob::update(){

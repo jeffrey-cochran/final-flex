@@ -2,10 +2,17 @@
 #define PARTICLE_HPP
 
 #include <vector>
+#include <set>
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include "Box2D/Box2D.h"
 #include "utils.hpp"
+
+struct particle_data {
+    particle_data();
+    std::shared_ptr<std::set<int>> w_flags;
+    int p_index;
+};
 
 /// A solid circle shape
 class particle
@@ -45,6 +52,9 @@ class particle
 
         void clearStrains();
 
+        void addWhiteFlag(int k);
+        void removeWhiteFlag(int k);
+
         double invm;
 
     private:
@@ -55,6 +65,7 @@ class particle
         b2Vec2 velocity;
         std::vector<b2Vec2> forces;
         std::vector<b2Vec2> strains;
+        std::set<int> white_flags;
         int id;
 };
 
@@ -68,6 +79,14 @@ inline void particle::setColor(sf::Color c) {
 
 inline void particle::addStrain(b2Vec2 strain_vector) {
     this->strains.push_back(strain_vector);
+}
+
+inline void particle::addWhiteFlag(int k) {
+    this->white_flags.insert(k);
+}
+
+inline void particle::removeWhiteFlag(int k) {
+    this->white_flags.erase(k);
 }
 
 #endif
