@@ -17,7 +17,7 @@ int main()
     //
     // Set simulation parameters
     // std::cout << params::time_step << std::endl;
-    double timeStep = 1.0f / 600000.f;
+    double timeStep = 1.0f / 60000.f;
     double strain_compliance = 0.;
     // params::setStrainCompliance(strain_compliance);
     // params::setTimeStep(timeStep);
@@ -56,9 +56,9 @@ int main()
     blob my_blob(
         world,
         sf::Color::Magenta,
-        50, 
-        10, 
-        .2, 
+        20, 
+        8, 
+        0.5, 
         center_of_mass
     );
     
@@ -67,8 +67,12 @@ int main()
 
     my_blob.fix(0);
     my_blob.fix(1);
-    my_blob.applyStrain(b2Vec2(0, -.00005), 18);
-    my_blob.applyStrain(b2Vec2(0, -.00005), 19);
+    my_blob.fix(2);
+    my_blob.fix(3);
+    my_blob.applyStrain(b2Vec2(0, -.0001), 36);
+    my_blob.applyStrain(b2Vec2(0, -.0001), 37);
+    my_blob.applyStrain(b2Vec2(0, -.0001), 38);
+    my_blob.applyStrain(b2Vec2(0, -.0001), 39);
 
     sf::Clock clock; // starts the clock
     while (main_window->isOpen())

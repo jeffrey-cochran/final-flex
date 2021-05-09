@@ -118,7 +118,7 @@ void blob::solve_constraints() {
 		for( auto& link_pair : this->links_ ) {
 			double strain_proxy = link_pair.second->update_position();
 			biggest_strain_proxy = strain_proxy > biggest_strain_proxy ? strain_proxy : biggest_strain_proxy;
-			if( abs(strain_proxy) > strain_proxy_threshold ) {
+			if( strain_proxy > strain_proxy_threshold ) {
 				links_with_excessive_strain.push_back(link_pair.first);
 			}			
 		}
@@ -132,17 +132,17 @@ void blob::solve_constraints() {
 			}
 			deletion_occurs = true;
 		}
-		if( deletion_occurs ) {
-			for( auto& p : this->particles_ ) {
-				p->clearStrains();
-			}
-		}
+		// if( deletion_occurs ) {
+		// 	for( auto& p : this->particles_ ) {
+		// 		p->clearStrains();
+		// 	}
+		// }
 	}
 
 
 	//
 	// Update velocities
-	double inv_time_step = 600000.;
+	double inv_time_step = 60000.;
 	for( const auto p : this->particles_ ) {
 		p->setLinearVelocity( inv_time_step * (p->getPosition() - p->getPreviousPosition()) );
 	}

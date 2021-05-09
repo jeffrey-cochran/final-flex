@@ -35,9 +35,9 @@ void StrainLink::update() {
 
 double StrainLink::update_position() {
 
-    double time_step = 1./600000.;
-    double inv_time_step = 600000.;
-    double normalized_strain_compliance = 30.;
+    double time_step = 1./60000.;
+    double inv_time_step = 60000.;
+    double normalized_strain_compliance = 45.;
     double linear_damping = 60.;
     double normalized_beta = pow(time_step,2.) * linear_damping;
     double gamma = normalized_beta * normalized_strain_compliance * inv_time_step;
