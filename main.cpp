@@ -2,8 +2,8 @@
 #include "blob.hpp"
 #include "SphereBVH.hpp"
 #include "particle.h"
-#include "Box2D/Box2D.h"
-// #include "params.hpp"
+#include "box2d/box2d.h"
+#include "params.hpp"
 #include <iostream>
 
 
@@ -16,12 +16,11 @@ int main()
 
     //
     // Set simulation parameters
-    // std::cout << params::time_step << std::endl;
     float timeStep = 1.0f / 600.f;
     float strain_compliance = 0.;
-    // params::setStrainCompliance(strain_compliance);
-    // params::setTimeStep(timeStep);
-    // std::cout << params::time_step << std::endl;
+    
+    params::setTimeStep(timeStep);
+    params::setStrainCompliance(strain_compliance);
 
 
 
@@ -82,7 +81,7 @@ int main()
 
         main_window->clear();
         
-        world.Step(timeStep, velocityIterations, positionIterations);
+        world.Step(params::time_step, velocityIterations, positionIterations);
 
         my_blob.update();
         my_blob.solve_constraints();

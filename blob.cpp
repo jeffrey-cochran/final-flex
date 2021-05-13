@@ -3,8 +3,8 @@
 #include "StrainLink.hpp"
 #include <vector>
 #include <iostream>
-#include "Box2D/Box2D.h"
-// #include "params.hpp"
+#include "box2d/box2d.h"
+#include "params.hpp"
 
 
 blob::blob(

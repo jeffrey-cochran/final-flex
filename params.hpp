@@ -1,5 +1,5 @@
-// #ifndef PARAMS_HPP
-// #define PARAMS_HPP
+#ifndef PARAMS_HPP
+#define PARAMS_HPP
 
 namespace params {
     extern float time_step;
@@ -14,4 +14,4 @@ namespace params {
     void setConstraintIters(int in_constraint_iters);
 }
 
-// #endif
+#endif

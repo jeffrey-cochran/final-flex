@@ -29,6 +29,4 @@ namespace params{
     void setConstraintIters(int in_constraint_iters) {
         params::constraint_iters = in_constraint_iters;
     }
-
-
 }

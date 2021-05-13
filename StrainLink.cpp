@@ -1,11 +1,11 @@
 #include <vector>
 #include <iostream>
 #include <SFML/Graphics.hpp>
-#include "Box2D/Box2D.h"
+#include "box2d/box2d.h"
 #include "utils.hpp"
 #include "particle.h"
 #include "StrainLink.hpp"
-// #include "params.hpp"
+#include "params.hpp"
 
 
 StrainLink::StrainLink(
@@ -35,9 +35,9 @@ void StrainLink::update() {
 
 void StrainLink::update_position() {
 
-    float time_step = 1./600;
-    float inv_time_step = 600.;
-    float normalized_strain_compliance = 90.;
+    float time_step = params::time_step;
+    float inv_time_step = params::inv_time_step;
+    float normalized_strain_compliance = params::normalized_strain_compliance;
     float linear_damping = 10.;
     float normalized_beta = pow(time_step,2.) * linear_damping;
     float gamma = normalized_beta * normalized_strain_compliance * inv_time_step;
