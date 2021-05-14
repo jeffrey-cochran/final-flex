@@ -49,24 +49,17 @@ int main()
     );
 
 
-    b2Vec2 center_of_mass(50., 100.);
+    b2Vec2 center_of_mass(100., 100.);
     //
     // Create a bunch of particles
-    bracket my_blob(
-        world,
-        sf::Color::Magenta,
-        30,
-        30, 
-        .2, 
-        center_of_mass,
-        .45,
-        1
-    );
+    dogbone my_blob(world, sf::Color::Magenta, 35, 20, 50, 15, 15, 0.2, center_of_mass);
+    my_blob.fixTopShoulder();
+    
+    bracket b_blob(world, sf::Color::Magenta, 30, 30, .2, center_of_mass, .45, 1);
     
     int32 velocityIterations = 6;
     int32 positionIterations = 2;
-
-    my_blob.fix(0);
+    
     //my_blob.fix(1);
     //my_blob.applyForce(b2Vec2(0, -10000.), 1);
     //my_blob.applyForce(b2Vec2(0, -10000.), 5);

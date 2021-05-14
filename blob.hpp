@@ -45,9 +45,7 @@ public:
 	// Constructors
 	blob(
 		b2World& world,
-		sf::Color color,
-		int width, 
-		int height, 
+		sf::Color color, 
 		float particles_per_unit_length, 
 		b2Vec2 center_of_mass
 	);
@@ -62,6 +60,7 @@ public:
 
 	//
 	// Attribute Access
+    int num_particles();
 	std::vector<particle> particles();
 	std::shared_ptr<particle> getParticle(int);
 
@@ -75,7 +74,7 @@ public:
 
 	void solve_constraints();
     
-    void constructBVH();
+    void constructBVHAndLinks();
 
 //
 // Attributes
@@ -90,10 +89,10 @@ protected:
 	float isotropic_stiffness;
 	std::shared_ptr<SphereNode> sphere_bvh_;
     
-    
-    int height_discretization;
-    int width_discretization;
-    int num_particles;
+    int num_particles_;
+    float radius_;
+    float current_x_;
+    float current_y_;
 	
 };
 
@@ -122,11 +121,23 @@ public:
 class dogbone : public blob {
 public:
     dogbone(b2World& world,
-              sf::Color color,
-              int width,
-              int height,
-              float particles_per_unit_length,
-              b2Vec2 center_of_mass);
+            sf::Color color,
+            int shoulder_width,
+            int shoulder_height,
+            int neck_height,
+            int neck_width,
+            int transition_length,
+            float particles_per_unit_length,
+            b2Vec2 center_of_mass);
+    
+    void fixTopShoulder();
+    
+private:
+    int shoulder_width_;
+    int shoulder_height_;
+    int neck_height_;
+    int neck_width_;
+    int transition_length_;
 };
 
 inline void blob::update(){

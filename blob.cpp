@@ -9,14 +9,13 @@
 
 blob::blob(b2World& world,
            sf::Color color,
-           int width,
-           int height,
            float particles_per_unit_length,
            b2Vec2 center_of_mass)
 {
-    // TODO?
-    height_discretization = height * particles_per_unit_length;
-    width_discretization = width * particles_per_unit_length;
+    
+    //
+    // Get particle attributes
+    radius_ = 0.5 / (float)particles_per_unit_length;
     
     //
     // Set center of mass
@@ -30,24 +29,21 @@ rectangle::rectangle(
 	int height, 
 	float particles_per_unit_length, 
 	b2Vec2 center_of_mass
-) : blob(world, color, width, height, particles_per_unit_length, center_of_mass)
+) : blob(world, color, particles_per_unit_length, center_of_mass)
 {
 	//
 	// Compute number of particles
-	int num_particles = height_discretization * width_discretization;
+    int height_discretization = height * particles_per_unit_length;
+    int width_discretization = width * particles_per_unit_length;
 	
-	//
-	// Get particle attributes
-    float radius = 0.5 / (float)particles_per_unit_length;
-    
-	float current_x = center_of_mass.x - ((float)width / 2.) + radius;
-	float current_y = center_of_mass.y + ((float)height / 2.) - radius;
+    current_x_ = center_of_mass.x - ((float)width / 2.) + radius_;
+	current_y_ = center_of_mass.y + ((float)height / 2.) - radius_;
 
 	for( int i = 0; i < width_discretization; i++ ) {
 		for( int j = 0; j < height_discretization; j++ ) {
             
-            float new_x = current_x + (2.*radius*j);
-            float new_y = current_y - (2.*radius*i);
+            float new_x = current_x_ + (2.*radius_*j);
+            float new_y = current_y_ - (2.*radius_*i);
             
  			//
 			// Create next particle
@@ -56,7 +52,7 @@ rectangle::rectangle(
 				new_y
 			);
 			particle p(
-				radius, 
+				radius_,
 				i*height_discretization + j, 
 				center,
 				color,
@@ -70,8 +66,7 @@ rectangle::rectangle(
 			);
 		}
 	}
-    
-    constructBVH();
+    constructBVHAndLinks();
 }
 
 bracket::bracket(b2World& world,
@@ -82,26 +77,22 @@ bracket::bracket(b2World& world,
                  b2Vec2 center_of_mass,
                  float orientation,
                  float density)
-: blob(world, color, width, height, particles_per_unit_length, center_of_mass)
+: blob(world, color, particles_per_unit_length, center_of_mass)
 {
     //
     // Compute number of particles
-    num_particles = (height_discretization + width_discretization) - 1;
-
-    //
-    // Get particle attributes
-    float radius = 0.5 / (float)particles_per_unit_length;
+    int height_discretization = height * particles_per_unit_length;
+    int width_discretization = width * particles_per_unit_length;
     
-    float current_x = center_of_mass.x - ((float)width / 2.) + radius;
-    float current_y = center_of_mass.y + ((float)height / 2.) - radius;
+    current_x_ = center_of_mass.x - ((float)width / 2.) + radius_;
+    current_y_ = center_of_mass.y + ((float)height / 2.) - radius_;
+    
+    int particle_count = 0;
 
     for( int i = 0; i < width_discretization; i++ ) {
         
-        float new_x = current_x;
-        float new_y = current_y - (2.*radius*i);
-        
-        //std::cout << "new_x: " << new_x << std::endl;
-        //std::cout << "new_y: " << new_y << std::endl;
+        float new_x = current_x_;
+        float new_y = current_y_ - (2.*radius_*i);
         
         //
        // Create next particle
@@ -110,11 +101,12 @@ bracket::bracket(b2World& world,
            new_y
        );
         
-        int index = i;
-        //std::cout << "Index of particle: " << index << std::endl;
+        int index = particle_count;
+        particle_count++;
+        
        particle p(
-           radius,
-           i,
+           radius_,
+           index,
            center,
            color,
            world
@@ -129,11 +121,8 @@ bracket::bracket(b2World& world,
     
     for( int j = 1; j < height_discretization; j++ ) {
         
-        float new_x = current_x + (2.*radius*j);
-        float new_y = current_y;
-        
-        //std::cout << "new_x: " << new_x << std::endl;
-        //std::cout << "new_y: " << new_y << std::endl;
+        float new_x = current_x_ + (2.*radius_*j);
+        float new_y = current_y_;
         
         //
        // Create next particle
@@ -141,10 +130,11 @@ bracket::bracket(b2World& world,
            new_x,
            new_y
        );
-        int index = (width_discretization + j) - 1;
-        //std::cout << "Index of particle: " << index << std::endl;
+        int index = particle_count;
+        particle_count++;
+        
         particle p(
-           radius,
+           radius_,
            index,
            center,
            color,
@@ -157,10 +147,180 @@ bracket::bracket(b2World& world,
         );
     }
     
-    constructBVH();
+    constructBVHAndLinks();
     
 }
 
+void dogbone::fixTopShoulder() {
+    for (int i = 1; i <= shoulder_width_; i++) {
+        fix(num_particles_ - i);
+    }
+}
+
+dogbone::dogbone(b2World& world,
+                 sf::Color color,
+                 int shoulder_width,
+                 int shoulder_height,
+                 int neck_height,
+                 int neck_width,
+                 int transition_length,
+                 float particles_per_unit_length,
+                 b2Vec2 center_of_mass)
+    : blob(world, color, particles_per_unit_length, center_of_mass) {
+        
+        //
+        // Compute number of particles
+        shoulder_width_ = shoulder_width * particles_per_unit_length;
+        shoulder_height_ = shoulder_height * particles_per_unit_length;
+        neck_height_ = neck_height * particles_per_unit_length;
+        neck_width_ = neck_width * particles_per_unit_length;
+        transition_length_ = transition_length * particles_per_unit_length;
+        
+        int height = 2*shoulder_height_ + 2*transition_length_ + neck_height_;
+        int width = shoulder_width_;
+        
+        current_x_ = center_of_mass.x - ((float)width / 2.) + radius_;
+        current_y_ = center_of_mass.y + ((float)height / 2.) - radius_;
+        
+        int particle_count = 0;
+        int down_depth = 0;
+        int target_depth = std::ceil(neck_height_/2.0);
+        int neck_offset = (neck_width_ - 1)/2.0;
+        
+        for ( ; down_depth < target_depth; down_depth++) {
+            for (int j = -neck_offset; j<=neck_offset; j++) {
+                
+                float new_x = current_x_ + (2.*radius_*j);
+                float new_y = current_y_ - (2.*radius_*down_depth);
+                
+                //
+                // Create next particle
+                b2Vec2 center(new_x, new_y);
+                
+                int index = particle_count;
+                particle_count++;
+                
+                particle p(radius_, index, center, color, world);
+                
+                std::shared_ptr<particle> pp = std::make_shared<particle>(p);
+                particles_.push_back(pp);
+            }
+        }
+        
+        target_depth = target_depth + transition_length_;
+        int transition_width;
+        for (transition_width = neck_width_; transition_width < shoulder_width_-2; transition_width += 2) {
+            
+        }
+        
+        int t_w_offset = (transition_width - 1) / 2;
+        
+        
+        for ( ; down_depth < target_depth; down_depth++) {
+            
+            for (int j = -t_w_offset; j <= t_w_offset; j++) {
+                float new_x = current_x_ + (2.*radius_*j);
+                float new_y = current_y_ - (2.*radius_*down_depth);
+                //
+                // Create next particle
+                b2Vec2 center(new_x, new_y);
+                
+                int index = particle_count;
+                particle_count++;
+                
+                particle p(radius_, index, center, color, world);
+                
+                std::shared_ptr<particle> pp = std::make_shared<particle>(p);
+                particles_.push_back(pp);
+            }
+            
+        }
+        
+        target_depth += shoulder_height_;
+        int s_w_offset = (shoulder_width_ - 1) / 2;
+        for ( ; down_depth < target_depth; down_depth++) {
+            for (int j = -s_w_offset; j <= s_w_offset; j++) {
+                float new_x = current_x_ + (2.*radius_*j);
+                float new_y = current_y_ - (2.*radius_*down_depth);
+                //
+                // Create next particle
+                b2Vec2 center(new_x, new_y);
+                
+                int index = particle_count;
+                particle_count++;
+                
+                particle p(radius_, index, center, color, world);
+                
+                std::shared_ptr<particle> pp = std::make_shared<particle>(p);
+                particles_.push_back(pp);
+            }
+        }
+        
+        int target_height = neck_height_ / 2;
+        
+        int up_height = 1;
+        for ( ; up_height <= target_height; up_height++) {
+            for (int j = -neck_offset; j <= neck_offset; j++) {
+                float new_x = current_x_ + (2.*radius_*j);
+                float new_y = current_y_ + (2.*radius_*up_height);
+                //
+                // Create next particle
+                b2Vec2 center(new_x, new_y);
+                
+                int index = particle_count;
+                particle_count++;
+                
+                particle p(radius_, index, center, color, world);
+                
+                std::shared_ptr<particle> pp = std::make_shared<particle>(p);
+                particles_.push_back(pp);
+            }
+            
+        }
+        
+        target_height = target_height + transition_length_;
+        
+        
+        for ( ; up_height <= target_height; up_height++) {
+            
+            for (int j = -t_w_offset; j <= t_w_offset; j++) {
+                float new_x = current_x_ + (2.*radius_*j);
+                float new_y = current_y_ + (2.*radius_*up_height);
+                //
+                // Create next particle
+                b2Vec2 center(new_x, new_y);
+                
+                int index = particle_count;
+                particle_count++;
+                
+                particle p(radius_, index, center, color, world);
+                
+                std::shared_ptr<particle> pp = std::make_shared<particle>(p);
+                particles_.push_back(pp);
+            }
+            
+        }
+        
+        target_height += shoulder_height_;
+        for ( ; up_height <= target_height; up_height++) {
+            for (int j = -s_w_offset; j <= s_w_offset; j++) {
+                float new_x = current_x_ + (2.*radius_*j);
+                float new_y = current_y_ + (2.*radius_*up_height);
+                //
+                // Create next particle
+                b2Vec2 center(new_x, new_y);
+                
+                int index = particle_count;
+                particle_count++;
+                
+                particle p(radius_, index, center, color, world);
+                
+                std::shared_ptr<particle> pp = std::make_shared<particle>(p);
+                particles_.push_back(pp);
+            }
+        }
+        constructBVHAndLinks();
+}
 
 void blob::solve_constraints() {
 
@@ -207,7 +367,14 @@ void blob::solve_constraints() {
 
 }
 
-void blob::constructBVH() {
+int blob::num_particles() {
+    return num_particles_;
+}
+
+void blob::constructBVHAndLinks() {
+    
+    num_particles_ = particles_.size();
+    
     // Construct a bounding volume hierarchy whose
     // leaf nodes are the particles of the blob
     sphere_bvh_ = BVH::TopDownSphereBVH(particles_);
