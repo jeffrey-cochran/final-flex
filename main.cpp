@@ -52,22 +52,24 @@ int main()
     b2Vec2 center_of_mass(50., 100.);
     //
     // Create a bunch of particles
-    blob my_blob(
+    bracket my_blob(
         world,
         sf::Color::Magenta,
-        50, 
-        10, 
+        30,
+        30, 
         .2, 
-        center_of_mass
+        center_of_mass,
+        .45,
+        1
     );
     
     int32 velocityIterations = 6;
     int32 positionIterations = 2;
 
     my_blob.fix(0);
-    my_blob.fix(1);
-    my_blob.applyForce(b2Vec2(0, -10000.), 18);
-    my_blob.applyForce(b2Vec2(0, -10000.), 19);
+    //my_blob.fix(1);
+    //my_blob.applyForce(b2Vec2(0, -10000.), 1);
+    //my_blob.applyForce(b2Vec2(0, -10000.), 5);
 
     sf::Clock clock; // starts the clock
     while (main_window->isOpen())

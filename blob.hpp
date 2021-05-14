@@ -74,20 +74,59 @@ public:
 	void setColor(sf::Color);
 
 	void solve_constraints();
+    
+    void constructBVH();
 
 //
 // Attributes
-private:
-	b2Vec2 position;
+protected:
+	b2Vec2 position_;
     std::vector<std::shared_ptr<particle>> particles_;
 	std::map<std::pair<int, int>, std::shared_ptr<StrainLink>> links_;
 	std::vector<int> fixed_particles_;
 	std::vector<int> forced_particles_;
-	Eigen::VectorXd lambdas;
-	Eigen::SparseMatrix<double> inv_mass;
+	Eigen::VectorXd lambdas_;
+	Eigen::SparseMatrix<double> inv_mass_;
 	float isotropic_stiffness;
-	std::shared_ptr<SphereNode> sphere_bvh;
+	std::shared_ptr<SphereNode> sphere_bvh_;
+    
+    
+    int height_discretization;
+    int width_discretization;
+    int num_particles;
 	
+};
+
+class rectangle : public blob {
+public:
+    rectangle(b2World& world,
+              sf::Color color,
+              int width,
+              int height,
+              float particles_per_unit_length,
+              b2Vec2 center_of_mass);
+};
+
+class bracket : public blob {
+public:
+    bracket(b2World& world,
+              sf::Color color,
+              int width,
+              int height,
+              float particles_per_unit_length,
+              b2Vec2 center_of_mass,
+              float orientation,
+              float density);
+};
+
+class dogbone : public blob {
+public:
+    dogbone(b2World& world,
+              sf::Color color,
+              int width,
+              int height,
+              float particles_per_unit_length,
+              b2Vec2 center_of_mass);
 };
 
 inline void blob::update(){
