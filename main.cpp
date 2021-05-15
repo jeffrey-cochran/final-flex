@@ -11,7 +11,7 @@ int main()
 {
     //
     // Create world
-    b2Vec2 gravity(0.0f, -10.f);
+    b2Vec2 gravity(0.0f, 0.f);
     b2World world(gravity);
 
     //
@@ -21,8 +21,6 @@ int main()
     
     params::setTimeStep(timeStep);
     params::setStrainCompliance(strain_compliance);
-
-
 
     b2BodyDef groundBodyDef;
     groundBodyDef.position.Set(0.0f, -10.0f);
@@ -59,13 +57,13 @@ int main()
     //dogbone dog_blob(world, sf::Color::Magenta, 35, 20, 50, 15, 15, 0.2, center_of_mass1);
     //dog_blob.fixTopShoulder();
     
-    //bracket b_blob(world, sf::Color::Magenta, 30, 30, .2, center_of_mass1, .45, 1);
+    bracket b_blob(world, sf::Color::Magenta, 40, 40, .2, center_of_mass1, .45, 1);
      
-    vnotch my_blob1(world, sf::Color::Magenta, 50, 30, 4, 0.5, center_of_mass1);
-    my_blob1.fix(my_blob1.getCenter());
+    //vnotch my_blob1(world, sf::Color::Magenta, 50, 30, 4, 0.5, center_of_mass1);
+    //my_blob1.fix(my_blob1.getCenter());
     
-    vnotch my_blob2(world, sf::Color::Magenta, 50, 30, 2, 0.3, center_of_mass2);
-    my_blob2.fix(my_blob2.getCenter());
+    //vnotch my_blob2(world, sf::Color::Magenta, 50, 30, 2, 0.3, center_of_mass2);
+    //my_blob2.fix(my_blob2.getCenter());
     
     //segment my_segment(world, sf::Color::Magenta, 15, 30, 0.2, center_of_mass1);
      
@@ -92,13 +90,9 @@ int main()
         
         world.Step(params::time_step, velocityIterations, positionIterations);
 
-        my_blob1.update();
-        my_blob1.solve_constraints();
-        my_blob1.Draw(main_window);
-        
-        my_blob2.update();
-        my_blob2.solve_constraints();
-        my_blob2.Draw(main_window);
+        b_blob.update();
+        b_blob.solve_constraints();
+        b_blob.Draw(main_window);
 
         main_window->draw(ground);
         main_window->display();

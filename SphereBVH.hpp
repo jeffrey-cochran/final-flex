@@ -7,8 +7,8 @@
 
 struct BoundingVolume {
     b2Vec2 center;
-    float radius;
-    float area;
+    double radius;
+    double area;
     void loadFromParticle(std::shared_ptr<particle> p);
 };
 

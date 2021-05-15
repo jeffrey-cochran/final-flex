@@ -19,8 +19,9 @@ class StrainLink
         );
 
         void update();
-        void update_position();
+        double update_position();
         void update_orientation();
+        double getStrain();
         void resetLambda();
         b2Vec2 getVector();
         std::pair<int,int> getId();
@@ -31,16 +32,20 @@ class StrainLink
         std::shared_ptr<particle> particle_a;
         std::shared_ptr<particle> particle_b;
         std::pair<int, int> id;
-        float compliance;
-        float normalized_compliance;
-        float rest_length;
-        float lambda;
+        double compliance;
+        double normalized_compliance;
+        double rest_length;
+        double lambda;
 };
 
 inline StrainLink::StrainLink() {}
 
 inline void StrainLink::resetLambda() {
     this->lambda = 0.;
+}
+
+inline double StrainLink::getStrain() {
+    return log(this->getVector().Length() / this->rest_length);
 }
 
 #endif

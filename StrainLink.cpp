@@ -33,7 +33,7 @@ void StrainLink::update() {
     this->update_position();
 }
 
-void StrainLink::update_position() {
+double StrainLink::update_position() {
 
     float time_step = params::time_step;
     float inv_time_step = params::inv_time_step;
@@ -46,11 +46,11 @@ void StrainLink::update_position() {
     // Get magnitude and direction of perfect
     // correction to original length
     b2Vec2 direction = this->getVector();
-    float magnitude = direction.Length() - this->rest_length;
+    double magnitude = direction.Length() - this->rest_length;
     direction.Normalize();
     
 
-	// float linear_damping = 0.0005;
+	// double linear_damping = 0.0005;
 	// for( auto& link_pair : this->links_ ) {
 	// 	b2Vec2 prev_v_a =link_pair.second->getParticleA()->getLinearVelocity();
 	// 	b2Vec2 prev_v_b =link_pair.second->getParticleB()->getLinearVelocity();
@@ -75,7 +75,7 @@ void StrainLink::update_position() {
 
     //
     // Compute the change in the lagrange multiplier
-    float delta_lambda = -(
+    double delta_lambda = -(
         magnitude + normalized_strain_compliance * this->lambda - gamma*(delta.x + delta.y)
     ) / (
         (1. + gamma) * (this->particle_a->invm + this->particle_b->invm) + normalized_strain_compliance
@@ -84,11 +84,6 @@ void StrainLink::update_position() {
     //
     // Update lagrange multiplier
     this->lambda += delta_lambda;
-
-    int cnt = 0;
-    if( delta_lambda > 0.0 ) {
-        std::cout << ++cnt << std::endl;
-    }
 
     //
     // Compute impulse for correction
@@ -107,7 +102,7 @@ void StrainLink::update_position() {
     );
 
     //
-    // void
+    return this->getStrain();
 };
 
 std::pair<int,int> StrainLink::getId() {

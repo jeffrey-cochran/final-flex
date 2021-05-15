@@ -22,7 +22,7 @@ class particle
         void Draw(std::shared_ptr<sf::RenderWindow> main_window);
         void update();
 
-        void setPosition(float x, float y);
+        void setPosition(double x, double y);
         void setPosition(b2Vec2 new_position);
         void setFixedPosition(b2Vec2 new_position);
         b2Vec2 getPosition();
@@ -32,16 +32,20 @@ class particle
         void setLinearVelocity(b2Vec2 new_velocity);
         b2Vec2 getLinearVelocity();
 
-        float getRadius();
+        double getRadius();
 
         void setColor(sf::Color c);
         void setIndex(int in_id);
 
         void applyForce();
+        void applyStrains();
         void addForce(b2Vec2 force);
+        void addStrain(b2Vec2 strain_vector);
         int getIndex();
 
-        float invm;
+        void clearStrains();
+
+        double invm;
 
     private:
         b2Body* body;
@@ -50,15 +54,20 @@ class particle
         b2Vec2 current_position, previous_position, fixed_position;
         b2Vec2 velocity;
         std::vector<b2Vec2> forces;
+        std::vector<b2Vec2> strains;
         int id;
 };
 
-inline float particle::getRadius(){
+inline double particle::getRadius(){
     return this->rendering_shape.getRadius();
 }
 
 inline void particle::setColor(sf::Color c) {
     this->rendering_shape.setFillColor(c);
+}
+
+inline void particle::addStrain(b2Vec2 strain_vector) {
+    this->strains.push_back(strain_vector);
 }
 
 #endif

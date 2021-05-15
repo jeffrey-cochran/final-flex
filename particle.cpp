@@ -65,7 +65,7 @@ void particle::update(){
     // 
 }
 
-void particle::setPosition(float x, float y) {
+void particle::setPosition(double x, double y) {
 
     this->current_position.Set(x, y);
 
@@ -119,6 +119,22 @@ int particle::getIndex() {
 
 void particle::addForce(b2Vec2 force) {
     this->forces.push_back(force);
+}
+
+void particle::applyStrains() {
+    if( this->strains.size() > 0 ) {
+        b2Vec2 new_fixed_position = this->getFixedPosition();
+        for( const auto& strain : this->strains ) {
+            new_fixed_position += strain;
+        }
+        this->setFixedPosition(new_fixed_position);
+    }
+    //
+    // void
+}
+
+void particle::clearStrains() {
+    this->strains.clear();
 }
 
 void particle::applyForce() {

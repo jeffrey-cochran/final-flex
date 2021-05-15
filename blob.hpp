@@ -46,7 +46,7 @@ public:
 	blob(
 		b2World& world,
 		sf::Color color, 
-		float particles_per_unit_length, 
+		float particles_per_unit_length,
 		b2Vec2 center_of_mass
 	);
 
@@ -69,6 +69,8 @@ public:
 
 	void applyForce(b2Vec2 force, int k);
 	void applyForce(b2Vec2 force, std::vector<int> kk);
+
+	void applyStrain(b2Vec2 strain_vector, int k);
 
 	void setColor(sf::Color);
 
