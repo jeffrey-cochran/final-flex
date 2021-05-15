@@ -22,6 +22,26 @@ blob::blob(b2World& world,
     position_.Set(center_of_mass.x, center_of_mass.y);
 }
 
+
+segment::segment(b2World& world,
+                 sf::Color color,
+                 int c_radius,
+                 float percentage,
+                 float particles_per_unit_length,
+                 b2Vec2 center_of_mass)
+: blob(world, color, particles_per_unit_length, center_of_mass) {
+    int radius = c_radius * particles_per_unit_length;
+    std::cout << "Radius of cirlce (in little blobs): " << radius << std::endl;
+    int c_length = std::round((2 * M_PI * radius));
+    std::cout << "C_Length: " << c_length << std::endl;
+    
+    
+    //current_x_ = center_of_mass.x - ((float)width / 2.) + radius_;
+    //current_y_ = center_of_mass.y + ((float)height / 2.) - radius_;
+    
+}
+
+
 int vnotch::getCenter() {
     return center_;
 }

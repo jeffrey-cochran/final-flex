@@ -153,6 +153,18 @@ public:
     int getCenter();
 private:
     int center_;
+    // could potentially come in handy to fix the four corners
+    std::vector<int> corners_;
+};
+
+class segment : public blob {
+public:
+    segment(b2World& world,
+            sf::Color color,
+            int c_radius,
+            float percentage,
+            float particles_per_unit_length,
+            b2Vec2 center_of_mass);
 };
 
 inline void blob::update(){
