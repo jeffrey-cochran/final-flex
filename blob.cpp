@@ -22,6 +22,79 @@ blob::blob(b2World& world,
     position_.Set(center_of_mass.x, center_of_mass.y);
 }
 
+int vnotch::getCenter() {
+    return center_;
+}
+
+vnotch::vnotch(b2World& world,
+    sf::Color color,
+    int width,
+    int height,
+    int depth,
+    float particles_per_unit_length,
+    b2Vec2 center_of_mass)
+: blob(world, color, particles_per_unit_length, center_of_mass) {
+    
+    int height_discretization = height * particles_per_unit_length;
+    int width_discretization = width * particles_per_unit_length;
+    
+    current_x_ = center_of_mass.x - ((float)width / 2.) + radius_;
+    current_y_ = center_of_mass.y + ((float)height / 2.) - radius_;
+    
+    int particle_count = 0;
+    
+    std::map<int, int> depth_map;
+    for (int w = 0; w < width_discretization; w++) {
+        depth_map.insert(std::pair<int, int>(w, height_discretization));
+    }
+    
+    int center_w = width_discretization / 2;
+    
+    int center_offset = 0;
+    int d = height_discretization - 2*depth;
+    for ( ; d <= height_discretization - 2; d += 2, center_offset++) {
+        depth_map[center_w + center_offset] = d;
+        depth_map[center_w - center_offset] = d;
+    }
+    
+    for (int i = 0; i < width_discretization; i++) {
+        int width_depth = depth_map.at(i);
+        int w_d_offset = (width_depth - 1) / 2;
+        for (int j = -w_d_offset; j <= w_d_offset; j++) {
+            float new_x = current_x_ + (2.*radius_*i);
+            float new_y = current_y_ - (2.*radius_*j);
+            
+             //
+            // Create next particle
+            b2Vec2 center(
+                new_x,
+                new_y
+            );
+            int index = particle_count;
+            particle_count++;
+            if (i == center_w && j == 0) {
+                center_ = index;
+            }
+            particle p(
+                radius_,
+                index,
+                center,
+                color,
+                world
+            );
+
+
+            std::shared_ptr<particle> pp = std::make_shared<particle>(p);
+            particles_.push_back(
+                pp
+            );
+        }
+    }
+    
+    constructBVHAndLinks();
+    
+}
+
 rectangle::rectangle(
 	b2World& world,
 	sf::Color color,
@@ -321,6 +394,8 @@ dogbone::dogbone(b2World& world,
         }
         constructBVHAndLinks();
 }
+
+
 
 void blob::solve_constraints() {
 

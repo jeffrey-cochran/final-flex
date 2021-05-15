@@ -109,13 +109,13 @@ public:
 class bracket : public blob {
 public:
     bracket(b2World& world,
-              sf::Color color,
-              int width,
-              int height,
-              float particles_per_unit_length,
-              b2Vec2 center_of_mass,
-              float orientation,
-              float density);
+            sf::Color color,
+            int width,
+            int height,
+            float particles_per_unit_length,
+            b2Vec2 center_of_mass,
+            float orientation,
+            float density);
 };
 
 class dogbone : public blob {
@@ -138,6 +138,21 @@ private:
     int neck_height_;
     int neck_width_;
     int transition_length_;
+};
+
+class vnotch : public blob {
+public:
+    vnotch(b2World& world,
+           sf::Color color,
+           int width,
+           int height,
+           int depth,
+           float particles_per_unit_length,
+           b2Vec2 center_of_mass);
+    
+    int getCenter();
+private:
+    int center_;
 };
 
 inline void blob::update(){

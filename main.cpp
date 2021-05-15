@@ -52,10 +52,13 @@ int main()
     b2Vec2 center_of_mass(100., 100.);
     //
     // Create a bunch of particles
-    dogbone my_blob(world, sf::Color::Magenta, 35, 20, 50, 15, 15, 0.2, center_of_mass);
-    my_blob.fixTopShoulder();
+    dogbone dog_blob(world, sf::Color::Magenta, 35, 20, 50, 15, 15, 0.2, center_of_mass);
+    dog_blob.fixTopShoulder();
     
     bracket b_blob(world, sf::Color::Magenta, 30, 30, .2, center_of_mass, .45, 1);
+    
+    vnotch my_blob(world, sf::Color::Magenta, 45, 25, 1, 0.2, center_of_mass);
+    my_blob.fix(my_blob.getCenter());
     
     int32 velocityIterations = 6;
     int32 positionIterations = 2;
