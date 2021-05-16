@@ -1,4 +1,6 @@
 #include "fixture.hpp"
+#include "params.hpp"
+#include <iostream>
 
 
 void fixture::Draw(std::shared_ptr<sf::RenderWindow> main_window)
@@ -7,26 +9,67 @@ void fixture::Draw(std::shared_ptr<sf::RenderWindow> main_window)
 }
 
 fixture::fixture(int index,
-                 int width,
-                 int height,
+                 float width,
+                 float height,
                  float orientation,
                  b2Vec2 pos,
                  sf::Color color,
-                 b2World&)
+                 b2World& world)
 {
     id = index;
     
     current_position.Set(pos.x, pos.y);
     previous_position.Set(pos.x, pos.y);
-    fixed_position.Set(pos.x, pos.y);
     
     b2Vec2 vis_pos = utils::phys2vis(pos);
     
-    physics_shape.SetAsBox(width/2., height/2., pos, orientation);
-    this->rendering_shape.setSize(sf::Vector2f());
-    //rendering_shape.setOrigin(radius, radius);
+    float hx = width/2.0;
+    float hy = height/2.0;
+    
+    b2Vec2 v1(142.5, 92.5);
+    b2Vec2 v2(157.5, 92.5);
+    b2Vec2 v3(157.5, 107.5);
+    b2Vec2 v4(142.5, 107.5);
+    
+    b2Vec2 vertices[4];
+    vertices[0] = v1;
+    vertices[1] = v2;
+    vertices[2] = v3;
+    vertices[3] = v4;
+    std::cout << "Num of vertices: " << sizeof(vertices) << std::endl;
+    
+    
+    this->physics_shape.Set(vertices, 4);
+    
+    
+    for (b2Vec2 v : this->physics_shape.m_vertices) {
+        std::cout << v.x << ", " << v.y << std::endl;
+    }
+    this->rendering_shape.setSize(sf::Vector2f(width, height));
+    this->rendering_shape.setPosition(pos.x, pos.y);
+    this->rendering_shape.setRotation(orientation);
     this->rendering_shape.setFillColor(color);
     
+    b2BodyDef bodyDef;
+    bodyDef.type = b2_dynamicBody;
+    bodyDef.position.Set(pos.x, pos.y);
+    this->body = world.CreateBody(&bodyDef);
+
+    b2FixtureDef fixtureDef;
+    fixtureDef.shape = &physics_shape;
+    fixtureDef.density = params::density;
+    fixtureDef.friction = params::friction;
+    fixtureDef.filter.groupIndex = 1;
+
+    this->body->CreateFixture(&fixtureDef);
+
+    this->invm = 1./this->body->GetMass();
+    
+}
+
+void fixture::updateVelocity() {
+    b2Vec2 check = getPosition() - getPreviousPosition();
+    setLinearVelocity(params::inv_time_step * (check));
 }
 
 void fixture::update(){
@@ -60,10 +103,6 @@ void fixture::setPosition(b2Vec2 new_position) {
     this->body->SetTransform(new_position, this->body->GetAngle());
 }
 
-void fixture::setFixedPosition(b2Vec2 new_position) {
-    this->fixed_position.Set(new_position.x, new_position.y);
-}
-
 void fixture::setLinearVelocity(b2Vec2 new_velocity) {
     this->body->SetLinearVelocity(new_velocity);
 }
@@ -80,10 +119,6 @@ b2Vec2 fixture::getPreviousPosition() {
     return this->previous_position;
 }
 
-b2Vec2 fixture::getFixedPosition() {
-    return this->fixed_position;
-}
-
 void fixture::setIndex(int index) {
     this->id = index;
 }
@@ -93,6 +128,7 @@ int fixture::getIndex() {
 }
 
 void fixture::addForce(b2Vec2 force) {
+    std::cout << "added force" << std::endl;
     this->forces.push_back(force);
 }
 

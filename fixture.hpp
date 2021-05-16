@@ -9,12 +9,12 @@
 class fixture {
 public:
     fixture(int index,
-            int width,
-            int height,
+            float width,
+            float height,
             float orientation,
             b2Vec2 pos,
             sf::Color color,
-            b2World&);
+            b2World& world);
     
     void Draw(std::shared_ptr<sf::RenderWindow> main_window);
     void update();
@@ -24,6 +24,8 @@ public:
     
     void setColor(sf::Color c);
     void setIndex(int in_id);
+    
+    void updateVelocity();
 
     void applyForce();
     void addForce(b2Vec2 force);
@@ -31,11 +33,14 @@ public:
     
     void setPosition(double x, double y);
     void setPosition(b2Vec2 new_position);
-    void setFixedPosition(b2Vec2 new_position);
     
     b2Vec2 getPosition();
     b2Vec2 getPreviousPosition();
     b2Vec2 getFixedPosition();
+    
+    
+    
+    double invm;
     
 private:
     b2Body* body;

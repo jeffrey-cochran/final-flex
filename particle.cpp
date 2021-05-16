@@ -1,6 +1,7 @@
 #include "particle.h"
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include "params.hpp"
 
 void particle::Draw(std::shared_ptr<sf::RenderWindow> main_window)
 {
@@ -44,10 +45,10 @@ particle::particle(
 
     b2FixtureDef fixtureDef;
     fixtureDef.shape = &physics_shape;
-    fixtureDef.density = 1.0f;
-    fixtureDef.friction = 0.3f; 
-    fixtureDef.filter.groupIndex = -1;
-
+    fixtureDef.density = params::density;
+    fixtureDef.friction = params::friction;
+    fixtureDef.filter.groupIndex = 1;
+    
     this->body->CreateFixture(&fixtureDef);
 
     this->invm = 1./this->body->GetMass();

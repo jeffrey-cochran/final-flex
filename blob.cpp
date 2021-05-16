@@ -478,9 +478,6 @@ void blob::solve_constraints() {
 	for( int m : this->forced_particles_ ) {
 		this->getParticle(m)->applyForce();
 	}
-
-
-
 }
 
 int blob::num_particles() {
