@@ -1,7 +1,7 @@
 #ifndef UTILS_HPP
 #define UTILS_HPP
 
-#include "box2d/box2d.h"
+#include "Box2D/Box2D.h"
 
 namespace utils {
     b2Vec2 phys2vis(b2Vec2 pos);

@@ -5,7 +5,7 @@
 // Headers
 ////////////////////////////////////////////////////////////
 #include <vector>
-#include "box2d/box2d.h"
+#include "Box2D/Box2D.h"
 #include "particle.h"
 #include "SphereBVH.hpp"
 #include "StrainLink.hpp"

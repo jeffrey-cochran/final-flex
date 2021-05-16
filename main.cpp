@@ -2,7 +2,7 @@
 #include "blob.hpp"
 #include "SphereBVH.hpp"
 #include "particle.h"
-#include "box2d/box2d.h"
+#include "Box2D/Box2D.h"
 #include "params.hpp"
 #include <iostream>
 

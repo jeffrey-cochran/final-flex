@@ -3,7 +3,7 @@
 #include "StrainLink.hpp"
 #include <vector>
 #include <iostream>
-#include "box2d/box2d.h"
+#include "Box2D/Box2D.h"
 #include "params.hpp"
 
 
@@ -464,8 +464,8 @@ void blob::solve_constraints() {
 
 				//
 				// Allow them to collide once separated
-				this->links_.at(key)->getParticleA()->removeWhiteFlag(this->links_.at(key)->getParticleB()->getIndex())
-				this->links_.at(key)->getParticleB()->removeWhiteFlag(this->links_.at(key)->getParticleA()->getIndex())
+				this->links_.at(key)->getParticleA()->removeWhiteFlag(this->links_.at(key)->getParticleB()->getIndex());
+				this->links_.at(key)->getParticleB()->removeWhiteFlag(this->links_.at(key)->getParticleA()->getIndex());
 
 				this->links_.erase(key);
 			}
@@ -552,13 +552,13 @@ std::shared_ptr<particle> blob::getParticle(int k) {
     return  this->particles_[k];
 }
 
-bool b2ContactFilter::ShouldCollide( b2Fixture* fixtureA, b2Fixture* fixtureB ) {
-	auto fix_a_data = fixtureA->GetUserData();
-	auto fix_b_data = fixtureB->GetUserData();
+// bool b2ContactFilter::ShouldCollide( b2Fixture* fixtureA, b2Fixture* fixtureB ) {
+// 	auto fix_a_data = fixtureA->GetUserData();
+// 	auto fix_b_data = fixtureB->GetUserData();
 
-	return (
-		fix_a_data.pairings.count(fix_b_data.index) == 0
-	) || (
-		fix_b_data.pairings.count(fix_a_data.index) == 0
-	);
-}
+// 	return (
+// 		fix_a_data.pairings.count(fix_b_data.index) == 0
+// 	) || (
+// 		fix_b_data.pairings.count(fix_a_data.index) == 0
+// 	);
+// }

@@ -50,7 +50,7 @@ particle::particle(
     fixtureDef.shape = &physics_shape;
     fixtureDef.density = 1.0f;
     fixtureDef.friction = 0.3f; 
-    fixtureDef.userData.pointer = reinterpret_cast<uintptr_t>(pd);
+    fixtureDef.userData = reinterpret_cast<uintptr_t>(pd);
 
     this->body->CreateFixture(&fixtureDef);
 

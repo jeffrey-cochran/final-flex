@@ -5,7 +5,7 @@
 #include <set>
 #include <iostream>
 #include <SFML/Graphics.hpp>
-#include "box2d/box2d.h"
+#include "Box2D/Box2D.h"
 #include "utils.hpp"
 
 struct particle_data {
