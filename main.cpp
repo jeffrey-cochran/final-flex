@@ -51,21 +51,8 @@ int main()
     b2Vec2 center_of_mass2(150., 100.);
     //
     // Create a bunch of particles
-    //rectangle my_blob1(world, sf::Color::Magenta, 40, 40, 0.4, center_of_mass1);
-    //rectangle my_blob2(world, sf::Color::Magenta, 40, 40, 0.2, center_of_mass2);
     
-    //dogbone dog_blob(world, sf::Color::Magenta, 35, 20, 50, 15, 15, 0.2, center_of_mass1);
-    //dog_blob.fixTopShoulder();
-    
-    bracket b_blob(world, sf::Color::Magenta, 40, 40, .2, center_of_mass1, .45, 1);
-     
-    //vnotch my_blob1(world, sf::Color::Magenta, 50, 30, 4, 0.5, center_of_mass1);
-    //my_blob1.fix(my_blob1.getCenter());
-    
-    //vnotch my_blob2(world, sf::Color::Magenta, 50, 30, 2, 0.3, center_of_mass2);
-    //my_blob2.fix(my_blob2.getCenter());
-    
-    //segment my_segment(world, sf::Color::Magenta, 15, 30, 0.2, center_of_mass1);
+    bracket b_blob(world, sf::Color::Magenta, 40, 40, .4, center_of_mass1, .45, 1);
      
     int32 velocityIterations = 6;
     int32 positionIterations = 2;
