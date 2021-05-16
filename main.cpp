@@ -2,8 +2,8 @@
 #include "blob.hpp"
 #include "SphereBVH.hpp"
 #include "particle.h"
-#include "Box2D/Box2D.h"
-// #include "params.hpp"
+#include "box2d/box2d.h"
+#include "params.hpp"
 #include <iostream>
 
 
@@ -11,19 +11,16 @@ int main()
 {
     //
     // Create world
-    b2Vec2 gravity(0.0f, -10.f);
+    b2Vec2 gravity(0.0f, 0.f);
     b2World world(gravity);
 
     //
     // Set simulation parameters
-    // std::cout << params::time_step << std::endl;
-    double timeStep = 1.0f / 60000.f;
-    double strain_compliance = 0.;
-    // params::setStrainCompliance(strain_compliance);
-    // params::setTimeStep(timeStep);
-    // std::cout << params::time_step << std::endl;
-
-
+    float timeStep = 1.0f / 600.f;
+    float strain_compliance = 0.;
+    
+    params::setTimeStep(timeStep);
+    params::setStrainCompliance(strain_compliance);
 
     b2BodyDef groundBodyDef;
     groundBodyDef.position.Set(0.0f, -10.0f);
@@ -50,29 +47,34 @@ int main()
     );
 
 
-    b2Vec2 center_of_mass(50., 100.);
+    b2Vec2 center_of_mass1(50., 100.);
+    b2Vec2 center_of_mass2(150., 100.);
     //
     // Create a bunch of particles
-    blob my_blob(
-        world,
-        sf::Color::Magenta,
-        20, 
-        8, 
-        0.5, 
-        center_of_mass
-    );
+    //rectangle my_blob1(world, sf::Color::Magenta, 40, 40, 0.4, center_of_mass1);
+    //rectangle my_blob2(world, sf::Color::Magenta, 40, 40, 0.2, center_of_mass2);
     
+    //dogbone dog_blob(world, sf::Color::Magenta, 35, 20, 50, 15, 15, 0.2, center_of_mass1);
+    //dog_blob.fixTopShoulder();
+    
+    bracket b_blob(world, sf::Color::Magenta, 40, 40, .2, center_of_mass1, .45, 1);
+     
+    //vnotch my_blob1(world, sf::Color::Magenta, 50, 30, 4, 0.5, center_of_mass1);
+    //my_blob1.fix(my_blob1.getCenter());
+    
+    //vnotch my_blob2(world, sf::Color::Magenta, 50, 30, 2, 0.3, center_of_mass2);
+    //my_blob2.fix(my_blob2.getCenter());
+    
+    //segment my_segment(world, sf::Color::Magenta, 15, 30, 0.2, center_of_mass1);
+     
     int32 velocityIterations = 6;
     int32 positionIterations = 2;
-
-    my_blob.fix(0);
-    my_blob.fix(1);
-    my_blob.fix(2);
-    my_blob.fix(3);
-    my_blob.applyStrain(b2Vec2(0, -.0001), 36);
-    my_blob.applyStrain(b2Vec2(0, -.0001), 37);
-    my_blob.applyStrain(b2Vec2(0, -.0001), 38);
-    my_blob.applyStrain(b2Vec2(0, -.0001), 39);
+    
+    //my_blob1.fix(0);
+    //my_blob1.fix(my_blob1.num_particles()-1);
+    
+    //my_blob.applyForce(b2Vec2(0, -10000.), 1);
+    //my_blob.applyForce(b2Vec2(0, -10000.), 5);
 
     sf::Clock clock; // starts the clock
     while (main_window->isOpen())
@@ -86,11 +88,11 @@ int main()
 
         main_window->clear();
         
-        world.Step(timeStep, velocityIterations, positionIterations);
+        world.Step(params::time_step, velocityIterations, positionIterations);
 
-        my_blob.update();
-        my_blob.solve_constraints();
-        my_blob.Draw(main_window);
+        b_blob.update();
+        b_blob.solve_constraints();
+        b_blob.Draw(main_window);
 
         main_window->draw(ground);
         main_window->display();

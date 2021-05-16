@@ -1,11 +1,11 @@
 #include <vector>
 #include <iostream>
 #include <SFML/Graphics.hpp>
-#include "Box2D/Box2D.h"
+#include "box2d/box2d.h"
 #include "utils.hpp"
 #include "particle.h"
 #include "StrainLink.hpp"
-// #include "params.hpp"
+#include "params.hpp"
 
 
 StrainLink::StrainLink(
@@ -35,12 +35,12 @@ void StrainLink::update() {
 
 double StrainLink::update_position() {
 
-    double time_step = 1./60000.;
-    double inv_time_step = 60000.;
-    double normalized_strain_compliance = 45.;
-    double linear_damping = 60.;
-    double normalized_beta = pow(time_step,2.) * linear_damping;
-    double gamma = normalized_beta * normalized_strain_compliance * inv_time_step;
+    float time_step = params::time_step;
+    float inv_time_step = params::inv_time_step;
+    float normalized_strain_compliance = params::normalized_strain_compliance;
+    float linear_damping = 10.;
+    float normalized_beta = pow(time_step,2.) * linear_damping;
+    float gamma = normalized_beta * normalized_strain_compliance * inv_time_step;
 
     //
     // Get magnitude and direction of perfect
