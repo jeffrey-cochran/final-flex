@@ -26,27 +26,11 @@ fixture::fixture(int index,
     float hx = width/2.0;
     float hy = height/2.0;
     
-    b2Vec2 v1(142.5, 92.5);
-    b2Vec2 v2(157.5, 92.5);
-    b2Vec2 v3(157.5, 107.5);
-    b2Vec2 v4(142.5, 107.5);
+    this->physics_shape.SetAsBox(hx, hy); // Setting as this for now
     
-    b2Vec2 vertices[4];
-    vertices[0] = v1;
-    vertices[1] = v2;
-    vertices[2] = v3;
-    vertices[3] = v4;
-    std::cout << "Num of vertices: " << sizeof(vertices) << std::endl;
-    
-    
-    this->physics_shape.SetAsBox(width/2.f, height/2.f, pos, orientation); // Setting as this for now
-    
-    
-    for (b2Vec2 v : this->physics_shape.m_vertices) {
-        std::cout << v.x << ", " << v.y << std::endl;
-    }
     this->rendering_shape.setSize(sf::Vector2f(width, height));
-    this->rendering_shape.setPosition(pos.x, pos.y);
+    this->rendering_shape.setOrigin(sf::Vector2f(hx, hy));
+    this->rendering_shape.setPosition(vis_pos.x, vis_pos.y);
     this->rendering_shape.setRotation(orientation);
     this->rendering_shape.setFillColor(color);
     

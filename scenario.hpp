@@ -2,6 +2,7 @@
 #define SCENARIO_HPP
 
 #include "particle.h"
+#include "blob.hpp"
 #include "SphereBVH.hpp"
 #include "StrainLink.hpp"
 
@@ -13,7 +14,9 @@ public:
              float damping_strength,
              float radius_influence);
     
-    void setUp();
+    
+    virtual void run(std::shared_ptr<sf::RenderWindow> window) = 0;
+   
     
     void evaluate(float time_step);
 protected:
@@ -25,11 +28,13 @@ protected:
 };
 
 class DogboneStretch : public Scenario {
+public:
     DogboneStretch(int shoulder_width,
                    int shoulder_height,
                    int neck_height,
                    int neck_width,
                    int transition_length,
+                   b2Vec2 center_of_mass,
                    b2Vec2 bottom_strain,
                    b2World& world,
                    float particle_density,
@@ -37,9 +42,10 @@ class DogboneStretch : public Scenario {
                    float damping_strength,
                    float radius_influence);
     
-    //void setUp();
+    void run(std::shared_ptr<sf::RenderWindow> window);
     
-    //void evaluate(float time_step);
+private:
+    dogbone bone_;
 };
 
 #endif

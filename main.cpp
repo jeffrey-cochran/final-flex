@@ -1,18 +1,14 @@
-#include <SFML/Graphics.hpp>
 #include "blob.hpp"
-#include "SphereBVH.hpp"
-#include "particle.h"
-#include "box2d/box2d.h"
 #include "params.hpp"
 #include "fixture.hpp"
-#include <iostream>
+#include "scenario.hpp"
 
 
 int main()
 {
     //
     // Create world
-    b2Vec2 gravity(0.0f, -10.f);
+    b2Vec2 gravity(0.0f, -0.f);
     b2World world(gravity);
 
     //
@@ -30,6 +26,10 @@ int main()
 
     b2PolygonShape groundBox;
     groundBox.SetAsBox(500.0f, 13.0f);
+    
+    for (b2Vec2 v : groundBox.m_vertices) {
+        std::cout << v.x << ", " << v.y << std::endl;
+    }
 
     groundBody->CreateFixture(&groundBox, 0.0f);
 
@@ -47,28 +47,16 @@ int main()
         "Dogbone"
     );
     
-    b2Vec2 center_of_mass(100., 100.);
-    b2Vec2 center_of_mass1(50., 100.);
-    b2Vec2 center_of_mass2(150., 100.);
-    //
-    // Create a bunch of particles
-    
-    //bracket b_blob(world, sf::Color::Magenta, 40, 40, .5, center_of_mass1, .45, 1);
-    
-    //fixture test(1, 15, 15, 0.0, center_of_mass2, sf::Color::Green, world);
-    //test.addForce(b2Vec2(-15.f, 0.f));
-    
-    dogbone bone(world, sf::Color::White, 35, 20, 55, 15, 10, 0.2, center_of_mass);
-    bone.fixTopShoulder();
-    
+    b2Vec2 center(100., 100.);
     b2Vec2 strain(0.f, -0.005);
-    bone.applyBottomStrain(strain);
-     
+    
+    Scenario* test;
+    
+    test = new DogboneStretch(45, 25, 25, 15, 10, center, strain, world, 0.2, 1.0, 1.0, 1.0);
+    
+    
     int32 velocityIterations = 6;
     int32 positionIterations = 2;
-    
-    //bone.applyForce(b2Vec2(0, -10000.), 1);
-    //bone.applyForce(b2Vec2(0, -10000.), 5);
 
     sf::Clock clock; // starts the clock
     while (main_window->isOpen())
@@ -84,9 +72,7 @@ int main()
         
         world.Step(params::time_step, velocityIterations, positionIterations);
         
-        bone.update();
-        bone.solve_constraints();
-        bone.Draw(main_window);
+        test->run(main_window);
         
         main_window->draw(ground);
         main_window->display();
