@@ -115,6 +115,7 @@ public:
             sf::Color color,
             int width,
             int height,
+            int thickness,
             float particles_per_unit_length,
             b2Vec2 center_of_mass,
             float orientation,

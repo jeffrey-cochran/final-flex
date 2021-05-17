@@ -11,16 +11,24 @@ namespace params {
     extern double fracture_strain;
     extern double yield_strain;
 
-    extern double friction;
-    extern double density;
+    extern double fixture_friction;
+    extern double fixture_density;
+
+    extern double particle_friction;
+    extern double particle_density;
 
     void setTimeStep(double in_time_step);
     void setStrainCompliance(double in_strain_compliance);
     void updateNormalizedCompliances();
+    void setFractureStrain(double f_strain);
+    void setYieldStrain(double y_strain);
     void setConstraintIters(int in_constraint_iters);
 
-    void setFriction(float pf_friction);
-    void setDensity(float pf_Density);
+    void setFixtureFriction(float f_friction);
+    void setFixtureDensity(float f_Density);
+
+    void setParticleFriction(float p_friction);
+    void setParticleDensity(float p_Density);
 }
 
 #endif

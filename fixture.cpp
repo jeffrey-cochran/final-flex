@@ -38,11 +38,14 @@ fixture::fixture(int index,
     bodyDef.type = b2_dynamicBody;
     bodyDef.position.Set(pos.x, pos.y);
     this->body = world.CreateBody(&bodyDef);
+    
+    float theta_rad = 2*M_PI * (orientation / 360.);
+    this->body->SetTransform(pos, theta_rad);
 
     b2FixtureDef fixtureDef;
     fixtureDef.shape = &physics_shape;
-    fixtureDef.density = params::density;
-    fixtureDef.friction = params::friction;
+    fixtureDef.density = params::fixture_density;
+    fixtureDef.friction = params::fixture_friction;
     fixtureDef.filter.groupIndex = 1;
 
     this->body->CreateFixture(&fixtureDef);
@@ -134,7 +137,7 @@ void fixture::applyDisplacement() {
         b2Vec2 old_fixed_position = this->getPosition();
         b2Vec2 new_fixed_position = this->getPosition();
         for( const auto& dis : this->displacements ) {
-            new_fixed_position += dis;
+            new_fixed_position.y += dis.y;
         }
         this->setPosition(new_fixed_position);
         this->setLinearVelocity(params::inv_time_step*(new_fixed_position - old_fixed_position));

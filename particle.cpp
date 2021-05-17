@@ -50,8 +50,8 @@ particle::particle(
 
     b2FixtureDef fixtureDef;
     fixtureDef.shape = &physics_shape;
-    fixtureDef.density = params::density;
-    fixtureDef.friction = params::friction;
+    fixtureDef.density = params::particle_density;
+    fixtureDef.friction = params::particle_friction;
 
     //
     // Set fixture userdataf
