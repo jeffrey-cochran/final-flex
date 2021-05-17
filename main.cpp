@@ -42,9 +42,7 @@ int main(int argc, char* argv[])
     );
     
     b2Vec2 center(75., 75.);
-    b2Vec2 b_center(100., 130.);
     b2Vec2 b_dis(0.f, -0.001);
-    b2Vec2 b_force(0.f, -0.001f);
     
     
     // Pointer to scenario since the class is abstract
@@ -57,7 +55,7 @@ int main(int argc, char* argv[])
     // Look at Scenario.cpp for details about the constructor
     //test = new DogboneStretch(45, 25, 25, 15, 10, center, strain, world, 0.2, 1.0, 1.0, 1.0);
     
-    test = new VNotchBreak(75, 40, 4, center, b_dis, world, 0.4, 1.0, 1.0, 1.0);
+    test = new VNotchBreak(75, 30, 6, center, b_dis, world, 0.6, 1.0, 1.0, 1.0);
     
     int32 velocityIterations = 6;
     int32 positionIterations = 2;
