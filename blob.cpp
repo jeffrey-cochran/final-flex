@@ -39,11 +39,6 @@ segment::segment(b2World& world,
     std::cout << "Radius of cirlce (in little blobs): " << radius << std::endl;
     int c_length = std::round((2 * M_PI * radius));
     std::cout << "C_Length: " << c_length << std::endl;
-    
-    
-    //current_x_ = center_of_mass.x - ((float)width / 2.) + radius_;
-    //current_y_ = center_of_mass.y + ((float)height / 2.) - radius_;
-    
 }
 
 

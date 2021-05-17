@@ -58,17 +58,17 @@ int main()
     //fixture test(1, 15, 15, 0.0, center_of_mass2, sf::Color::Green, world);
     //test.addForce(b2Vec2(-15.f, 0.f));
     
-    dogbone bone(world, sf::Color::White, 35, 20, 55, 15, 10, 0.1, center_of_mass);
+    dogbone bone(world, sf::Color::White, 35, 20, 55, 15, 10, 0.2, center_of_mass);
     bone.fixTopShoulder();
     
-    b2Vec2 strain(0.f, -1000.f);
+    b2Vec2 strain(0.f, -0.005);
     bone.applyBottomStrain(strain);
      
     int32 velocityIterations = 6;
     int32 positionIterations = 2;
     
-    //my_blob.applyForce(b2Vec2(0, -10000.), 1);
-    //my_blob.applyForce(b2Vec2(0, -10000.), 5);
+    //bone.applyForce(b2Vec2(0, -10000.), 1);
+    //bone.applyForce(b2Vec2(0, -10000.), 5);
 
     sf::Clock clock; // starts the clock
     while (main_window->isOpen())
