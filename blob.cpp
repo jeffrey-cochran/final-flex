@@ -605,6 +605,11 @@ void blob::constructBVHAndLinks() {
 
             StrainLink current_link(p, this->getParticle(j));
             if( this->links_.count(current_link.getId()) == 0 ) {
+                p->addWhiteFlag(this->id_, j);
+                this->getParticle(
+                    j
+                )->addWhiteFlag(this->id_, p->getIndex());
+                
                 this->links_.insert(
                     { current_link.getId(), std::make_shared<StrainLink>(current_link) }
                 );

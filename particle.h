@@ -80,6 +80,7 @@ inline void particle::addStrain(b2Vec2 strain_vector) {
 
 inline void particle::addWhiteFlag(int body_id, int particle_id) {
     this->white_flags.insert(std::pair(body_id, particle_id));
+    std::cout << "ADDING. TOTAL FRIEND: " << this->white_flags.size() << std::endl;
 }
 
 inline void particle::removeWhiteFlag(int body_id, int particle_id) {

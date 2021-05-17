@@ -1,5 +1,6 @@
 #include "box2d/box2d.h"
 #include "utils.hpp"
+#include <iostream>
 
 namespace utils {
     b2Vec2 phys2vis(b2Vec2 phys_pos) {
@@ -17,6 +18,7 @@ bool b2ContactFilter::ShouldCollide( b2Fixture* fixtureA, b2Fixture* fixtureB ) 
 
 	bool should_collide = true;
 	if( fix_a_data && fix_b_data) {
+		std::cout << "Has flags: " << fix_a_data->w_flags << std::endl;
 		should_collide = (
 			fix_a_data->w_flags->count(fix_b_data->flag_id) == 0
 		) || (

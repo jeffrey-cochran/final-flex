@@ -12,7 +12,7 @@ int main(int argc, char* argv[])
     //
     // Set simulation parameters
     float timeStep = 1.0f / 600.f;
-    float strain_compliance = 0.1;
+    float strain_compliance = 0.0;
     
     params::setTimeStep(timeStep);
     params::setStrainCompliance(strain_compliance);
