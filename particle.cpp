@@ -1,6 +1,7 @@
 #include "particle.h"
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include "box2d/box2d.h"
 
 void particle::Draw(std::shared_ptr<sf::RenderWindow> main_window)
 {
@@ -18,6 +19,7 @@ particle::particle(){
 particle::particle(
     double radius, 
     int in_id, 
+    int in_body_index,
     b2Vec2 phys_pos, 
     sf::Color color,
     b2World& world
@@ -42,15 +44,20 @@ particle::particle(
     bodyDef.position.Set(phys_pos.x, phys_pos.y);
     this->body = world.CreateBody(&bodyDef);
 
-    particle_data* pd = new particle_data;
-    pd->w_flags = std::make_shared<std::set<int>>(this->white_flags);
-    pd->p_index = in_id;
-
     b2FixtureDef fixtureDef;
     fixtureDef.shape = &physics_shape;
     fixtureDef.density = 1.0f;
     fixtureDef.friction = 0.3f; 
-    fixtureDef.userData = reinterpret_cast<uintptr_t>(pd);
+    
+    //
+    // Set fixture userdataf
+    FixtureUserData* pd = new FixtureUserData(
+        std::make_shared<std::set<std::pair<int,int>>>(this->white_flags),
+        in_body_index,
+        in_id
+    );
+    
+    fixtureDef.userData.pointer = reinterpret_cast<uintptr_t>(pd);
 
     this->body->CreateFixture(&fixtureDef);
 

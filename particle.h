@@ -4,15 +4,11 @@
 #include <vector>
 #include <set>
 #include <iostream>
+#include <memory>
 #include <SFML/Graphics.hpp>
-#include "Box2D/Box2D.h"
+#include "box2d/box2d.h"
 #include "utils.hpp"
 
-struct particle_data {
-    particle_data();
-    std::shared_ptr<std::set<int>> w_flags;
-    int p_index;
-};
 
 /// A solid circle shape
 class particle
@@ -22,6 +18,7 @@ class particle
         particle(
             double radius, 
             int index, 
+            int body_index,
             b2Vec2 pos, 
             sf::Color color,
             b2World&
@@ -52,8 +49,8 @@ class particle
 
         void clearStrains();
 
-        void addWhiteFlag(int k);
-        void removeWhiteFlag(int k);
+        void addWhiteFlag(int body_id, int particle_id);
+        void removeWhiteFlag(int body_id, int particle_id);
 
         double invm;
 
@@ -65,7 +62,8 @@ class particle
         b2Vec2 velocity;
         std::vector<b2Vec2> forces;
         std::vector<b2Vec2> strains;
-        std::set<int> white_flags;
+        std::set<std::pair<int,int>> white_flags;
+        FixtureUserData* collision_data; 
         int id;
 };
 
@@ -81,12 +79,12 @@ inline void particle::addStrain(b2Vec2 strain_vector) {
     this->strains.push_back(strain_vector);
 }
 
-inline void particle::addWhiteFlag(int k) {
-    this->white_flags.insert(k);
+inline void particle::addWhiteFlag(int body_id, int particle_id) {
+    this->white_flags.insert(std::pair(body_id, particle_id));
 }
 
-inline void particle::removeWhiteFlag(int k) {
-    this->white_flags.erase(k);
+inline void particle::removeWhiteFlag(int body_id, int particle_id) {
+    this->white_flags.erase(std::pair(body_id, particle_id));
 }
 
 #endif

@@ -5,7 +5,7 @@
 // Headers
 ////////////////////////////////////////////////////////////
 #include <vector>
-#include "Box2D/Box2D.h"
+#include "box2d/box2d.h"
 #include "particle.h"
 #include "SphereBVH.hpp"
 #include "StrainLink.hpp"
@@ -92,6 +92,7 @@ protected:
 	std::shared_ptr<SphereNode> sphere_bvh_;
     
     int num_particles_;
+    int id_;
     float radius_;
     float current_x_;
     float current_y_;

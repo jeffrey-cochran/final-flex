@@ -63,7 +63,7 @@ target_sources(final_flex PUBLIC ${CMAKE_CURRENT_LIST_DIR}/utils.cpp)
 target_sources(final_flex PUBLIC ${CMAKE_CURRENT_LIST_DIR}/blob.cpp)
 
 #
-# Box2D
+# box2d
 target_include_directories(final_flex PUBLIC $ENV{BOX2D_INCLUDE_DIR})
 target_link_libraries(final_flex PRIVATE $ENV{BOX2D_LIB})
 

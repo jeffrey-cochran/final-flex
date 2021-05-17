@@ -2,7 +2,7 @@
 #include "blob.hpp"
 #include "SphereBVH.hpp"
 #include "particle.h"
-#include "Box2D/Box2D.h"
+#include "box2d/box2d.h"
 #include "params.hpp"
 #include <iostream>
 
@@ -11,7 +11,7 @@ int main()
 {
     //
     // Create world
-    b2Vec2 gravity(0.0f, 0.f);
+    b2Vec2 gravity(0.0f, -10.f);
     b2World world(gravity);
 
     //

@@ -3,9 +3,9 @@
 #include "StrainLink.hpp"
 #include <vector>
 #include <iostream>
-#include "Box2D/Box2D.h"
+#include "box2d/box2d.h"
 #include "params.hpp"
-
+#include "utils.hpp"
 
 blob::blob(b2World& world,
            sf::Color color,
@@ -20,6 +20,11 @@ blob::blob(b2World& world,
     //
     // Set center of mass
     position_.Set(center_of_mass.x, center_of_mass.y);
+
+    //
+    // Increment body count
+    utils::current_body_index++;
+    this->id_ = utils::current_body_index;
 }
 
 
@@ -98,11 +103,11 @@ vnotch::vnotch(b2World& world,
             particle p(
                 radius_,
                 index,
+                this->id_,
                 center,
                 color,
                 world
             );
-
 
             std::shared_ptr<particle> pp = std::make_shared<particle>(p);
             particles_.push_back(
@@ -146,6 +151,7 @@ rectangle::rectangle(b2World& world,
 			particle p(
 				radius_,
 				i*height_discretization + j, 
+                this->id_,
 				center,
 				color,
 				world
@@ -199,6 +205,7 @@ bracket::bracket(b2World& world,
        particle p(
            radius_,
            index,
+           this->id_,
            center,
            color,
            world
@@ -228,6 +235,7 @@ bracket::bracket(b2World& world,
         particle p(
            radius_,
            index,
+           this->id_,
            center,
            color,
            world
@@ -292,7 +300,7 @@ dogbone::dogbone(b2World& world,
                 int index = particle_count;
                 particle_count++;
                 
-                particle p(radius_, index, center, color, world);
+                particle p(radius_, index, this->id_, center, color, world);
                 
                 std::shared_ptr<particle> pp = std::make_shared<particle>(p);
                 particles_.push_back(pp);
@@ -320,7 +328,7 @@ dogbone::dogbone(b2World& world,
                 int index = particle_count;
                 particle_count++;
                 
-                particle p(radius_, index, center, color, world);
+                particle p(radius_, index, this->id_, center, color, world);
                 
                 std::shared_ptr<particle> pp = std::make_shared<particle>(p);
                 particles_.push_back(pp);
@@ -341,7 +349,7 @@ dogbone::dogbone(b2World& world,
                 int index = particle_count;
                 particle_count++;
                 
-                particle p(radius_, index, center, color, world);
+                particle p(radius_, index, this->id_, center, color, world);
                 
                 std::shared_ptr<particle> pp = std::make_shared<particle>(p);
                 particles_.push_back(pp);
@@ -362,7 +370,7 @@ dogbone::dogbone(b2World& world,
                 int index = particle_count;
                 particle_count++;
                 
-                particle p(radius_, index, center, color, world);
+                particle p(radius_, index, this->id_, center, color, world);
                 
                 std::shared_ptr<particle> pp = std::make_shared<particle>(p);
                 particles_.push_back(pp);
@@ -385,7 +393,7 @@ dogbone::dogbone(b2World& world,
                 int index = particle_count;
                 particle_count++;
                 
-                particle p(radius_, index, center, color, world);
+                particle p(radius_, index, this->id_, center, color, world);
                 
                 std::shared_ptr<particle> pp = std::make_shared<particle>(p);
                 particles_.push_back(pp);
@@ -405,7 +413,7 @@ dogbone::dogbone(b2World& world,
                 int index = particle_count;
                 particle_count++;
                 
-                particle p(radius_, index, center, color, world);
+                particle p(radius_, index, this->id_, center, color, world);
                 
                 std::shared_ptr<particle> pp = std::make_shared<particle>(p);
                 particles_.push_back(pp);
@@ -464,8 +472,14 @@ void blob::solve_constraints() {
 
 				//
 				// Allow them to collide once separated
-				this->links_.at(key)->getParticleA()->removeWhiteFlag(this->links_.at(key)->getParticleB()->getIndex());
-				this->links_.at(key)->getParticleB()->removeWhiteFlag(this->links_.at(key)->getParticleA()->getIndex());
+				this->links_.at(key)->getParticleA()->removeWhiteFlag(
+                    this->id_,
+                    this->links_.at(key)->getParticleB()->getIndex()
+                );
+				this->links_.at(key)->getParticleB()->removeWhiteFlag(
+                    this->id_,
+                    this->links_.at(key)->getParticleA()->getIndex()
+                );
 
 				this->links_.erase(key);
 			}
@@ -551,14 +565,3 @@ void blob::fix(std::vector<int> kk) {
 std::shared_ptr<particle> blob::getParticle(int k) {
     return  this->particles_[k];
 }
-
-// bool b2ContactFilter::ShouldCollide( b2Fixture* fixtureA, b2Fixture* fixtureB ) {
-// 	auto fix_a_data = fixtureA->GetUserData();
-// 	auto fix_b_data = fixtureB->GetUserData();
-
-// 	return (
-// 		fix_a_data.pairings.count(fix_b_data.index) == 0
-// 	) || (
-// 		fix_b_data.pairings.count(fix_a_data.index) == 0
-// 	);
-// }

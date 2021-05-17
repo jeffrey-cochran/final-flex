@@ -1,7 +1,7 @@
 #include <vector>
 #include <iostream>
 #include <SFML/Graphics.hpp>
-#include "Box2D/Box2D.h"
+#include "box2d/box2d.h"
 #include "utils.hpp"
 #include "particle.h"
 #include "StrainLink.hpp"
@@ -17,7 +17,7 @@ StrainLink::StrainLink(
     this->particle_b = in_particle_a->getIndex() < in_particle_b->getIndex() ? in_particle_b : in_particle_a;
 
 
-    this->id = std::make_pair<int,int>(this->particle_a->getIndex(), this->particle_b->getIndex());
+    this->id = std::pair<int,int>(this->particle_a->getIndex(), this->particle_b->getIndex());
     
     this->rest_length = this->getVector().Length();
 
