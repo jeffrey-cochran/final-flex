@@ -160,12 +160,24 @@ public:
     
     void fixCenter();
     void fixLeftEdge();
+    void fixLeftTopEdge();
+    void fixLeftBottomEdge();
+    
+    void applyRightStrain(b2Vec2 strain);
+    void applyRightBottomStrain(b2Vec2 strain);
+    void applyRightTopStrain(b2Vec2 strain);
+    void fixRightTopEdge();
+    void fixRightBottomEdge();
     void fixRightEdge();
 private:
     int center_;
     // could potentially come in handy to fix the four corners
     std::vector<int> corners_;
     std::vector<int> left_edge_;
+    std::vector<int> left_top_edge_;
+    std::vector<int> left_bottom_edge_;
+    std::vector<int> right_top_edge_;
+    std::vector<int> right_bottom_edge_;
     std::vector<int> right_edge_;
 };
 

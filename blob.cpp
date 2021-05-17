@@ -54,6 +54,48 @@ void vnotch::fixLeftEdge() {
     }
 }
 
+void vnotch::fixLeftTopEdge() {
+    for (int ind : left_top_edge_) {
+        fix(ind);
+    }
+}
+
+void vnotch::fixLeftBottomEdge() {
+    for (int ind : left_bottom_edge_) {
+        fix(ind);
+    }
+    
+}
+
+void vnotch::fixRightTopEdge() {
+    for (int ind : right_top_edge_) {
+        fix(ind);
+    }
+}
+
+void vnotch::applyRightBottomStrain(b2Vec2 strain) {
+    for (int ind : right_bottom_edge_) {
+        applyStrain(strain, ind);
+    }
+    
+}
+
+void vnotch::applyRightTopStrain(b2Vec2 strain) {
+    for (int ind : right_top_edge_) {
+        applyStrain(strain, ind);
+    }
+}
+
+void vnotch::applyRightStrain(b2Vec2 strain) {
+    applyRightTopStrain(strain);
+    applyRightBottomStrain(strain);
+}
+
+void vnotch::fixRightBottomEdge() {
+    for (int ind : right_bottom_edge_) {
+        fix(ind);
+    }
+}
 vnotch::vnotch(b2World& world,
     sf::Color color,
     int width,
@@ -100,12 +142,30 @@ vnotch::vnotch(b2World& world,
             );
             int index = particle_count;
             particle_count++;
+            
+            
             if (i == center_w && j == 0) {
                 center_ = index;
             }
             
             if (i == 0) {
                 left_edge_.push_back(index);
+            }
+            
+            bool isLeft = i < center_w;
+            bool isRight = i > center_w;
+            bool isBottom = (j == w_d_offset);
+            bool isTop = (j == -w_d_offset);
+            bool isFull = (width_depth == height_discretization);
+            
+            if (isLeft && isBottom && isFull) {
+                left_bottom_edge_.push_back(index);
+            } else if (isLeft && isTop && isFull) {
+                left_top_edge_.push_back(index);
+            } else if (isRight && isBottom && isFull) {
+                right_bottom_edge_.push_back(index);
+            } else if (isRight && isTop && isFull) {
+                right_top_edge_.push_back(index);
             }
             particle p(
                 radius_,

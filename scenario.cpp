@@ -71,25 +71,26 @@ void DogboneStretch::run(std::shared_ptr<sf::RenderWindow> window) {
  
  Take a look at addDisplacement and applyDisplacement in fixture.cpp
  */
-VNotchBreak::VNotchBreak(int vn_width, int vn_height, int n_depth, int f_width,
-                         int f_heigth, b2Vec2 vn_center, b2Vec2 f_center, b2World& world,
-                         b2Vec2 f_force, float pd, float ls, float ds, float ri)
-: Scenario(pd, ls, ds, ri), vn_(world, sf::Color::White, vn_width, vn_height, n_depth, pd, vn_center),
-rect_(0, f_width, f_heigth, 0.0, f_center, sf::Color::Green, world)
+VNotchBreak::VNotchBreak(int vn_width,
+                         int vn_height,
+                         int n_depth,
+                         b2Vec2 vn_center,
+                         b2Vec2 strain,
+                         b2World& world,
+                         float pd,
+                         float ls,
+                         float ds,
+                         float ri)
+: Scenario(pd, ls, ds, ri), vn_(world, sf::Color::White, vn_width, vn_height, n_depth, pd, vn_center)
 {
-    vn_.fixLeftEdge();
-    // rect_.addForce(f_force);
-    rect_.addDisplacement(f_force);
+    vn_.fixLeftTopEdge();
+    vn_.fixLeftBottomEdge();
+    vn_.applyRightStrain(strain);
 }
 
 void VNotchBreak::run(std::shared_ptr<sf::RenderWindow> window) {
     vn_.update();
     vn_.solve_constraints();
     vn_.Draw(window);
-    
-    rect_.update();
-    // rect_.applyForce();
-    rect_.applyDisplacement();
-    rect_.Draw(window);
 };
 
