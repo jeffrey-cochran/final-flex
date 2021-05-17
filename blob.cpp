@@ -532,13 +532,13 @@ void blob::solve_constraints() {
 
 		//
 		// Solve link constraints
-		double strain_proxy_threshold = 0.1;
+		double fracture_strain = params::fracture_strain;
 		double biggest_strain_proxy = 0.0;
 		std::vector<std::pair<int,int>> links_with_excessive_strain;
 		for( auto& link_pair : this->links_ ) {
 			double strain_proxy = link_pair.second->update_position();
 			biggest_strain_proxy = strain_proxy > biggest_strain_proxy ? strain_proxy : biggest_strain_proxy;
-			if( strain_proxy > strain_proxy_threshold ) {
+			if( strain_proxy > fracture_strain ) {
 				links_with_excessive_strain.push_back(link_pair.first);
 			}			
 		}

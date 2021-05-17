@@ -22,6 +22,7 @@ class StrainLink
         double update_position();
         void update_orientation();
         double getStrain();
+        double getPlasticStrain();
         void resetLambda();
         b2Vec2 getVector();
         std::pair<int,int> getId();
@@ -36,6 +37,7 @@ class StrainLink
         double normalized_compliance;
         double rest_length;
         double lambda;
+        double accumulated_plastic_strain;
 };
 
 inline StrainLink::StrainLink() {}
@@ -46,6 +48,10 @@ inline void StrainLink::resetLambda() {
 
 inline double StrainLink::getStrain() {
     return log(this->getVector().Length() / this->rest_length);
+}
+
+inline double StrainLink::getPlasticStrain() {
+    return this->accumulated_plastic_strain;
 }
 
 #endif

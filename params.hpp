@@ -7,9 +7,12 @@ namespace params {
     extern double strain_compliance;
     extern double normalized_strain_compliance;
     extern int constraint_iters;
+    extern double linear_damping;
+    extern double fracture_strain;
+    extern double yield_strain;
 
-    extern float friction;
-    extern float density;
+    extern double friction;
+    extern double density;
 
     void setTimeStep(double in_time_step);
     void setStrainCompliance(double in_strain_compliance);
