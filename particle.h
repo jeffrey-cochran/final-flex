@@ -5,14 +5,8 @@
 #include <set>
 #include <iostream>
 #include <SFML/Graphics.hpp>
-#include "Box2D/Box2D.h"
+#include "box2d/box2d.h"
 #include "utils.hpp"
-
-struct particle_data {
-    particle_data();
-    std::shared_ptr<std::set<int>> w_flags;
-    int p_index;
-};
 
 /// A solid circle shape
 class particle

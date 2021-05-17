@@ -57,7 +57,6 @@ std::vector<int> SphereNode::intersects(SphereNode& test_node) {
 
     if( this->index >= 0 && this->index != test_node.index && is_intersecting ) {
         intersections.emplace_back(this->index);
-        this->object->setColor(sf::Color::White);
     } else if( this->index < 0 && is_intersecting ) {
         if( this->left_child ) {
             

@@ -4,6 +4,7 @@
 #include "particle.h"
 #include "Box2D/Box2D.h"
 #include "params.hpp"
+#include "fixture.hpp"
 #include <iostream>
 
 
@@ -43,35 +44,28 @@ int main()
     // Create visualizer window
     std::shared_ptr<sf::RenderWindow> main_window = std::make_shared<sf::RenderWindow>(
         sf::VideoMode(200, 200), 
-        "SFML works!"
+        "Dogbone"
     );
-
-
+    
+    b2Vec2 center_of_mass(100., 100.);
     b2Vec2 center_of_mass1(50., 100.);
     b2Vec2 center_of_mass2(150., 100.);
     //
     // Create a bunch of particles
-    //rectangle my_blob1(world, sf::Color::Magenta, 40, 40, 0.4, center_of_mass1);
-    //rectangle my_blob2(world, sf::Color::Magenta, 40, 40, 0.2, center_of_mass2);
     
-    //dogbone dog_blob(world, sf::Color::Magenta, 35, 20, 50, 15, 15, 0.2, center_of_mass1);
-    //dog_blob.fixTopShoulder();
+    //bracket b_blob(world, sf::Color::Magenta, 40, 40, .5, center_of_mass1, .45, 1);
     
-    bracket b_blob(world, sf::Color::Magenta, 40, 40, .2, center_of_mass1, .45, 1);
-     
-    //vnotch my_blob1(world, sf::Color::Magenta, 50, 30, 4, 0.5, center_of_mass1);
-    //my_blob1.fix(my_blob1.getCenter());
+    //fixture test(1, 15, 15, 0.0, center_of_mass2, sf::Color::Green, world);
+    //test.addForce(b2Vec2(-15.f, 0.f));
     
-    //vnotch my_blob2(world, sf::Color::Magenta, 50, 30, 2, 0.3, center_of_mass2);
-    //my_blob2.fix(my_blob2.getCenter());
+    dogbone bone(world, sf::Color::White, 35, 20, 55, 15, 10, 0.1, center_of_mass);
+    bone.fixTopShoulder();
     
-    //segment my_segment(world, sf::Color::Magenta, 15, 30, 0.2, center_of_mass1);
+    b2Vec2 strain(0.f, -1000.f);
+    bone.applyBottomStrain(strain);
      
     int32 velocityIterations = 6;
     int32 positionIterations = 2;
-    
-    //my_blob1.fix(0);
-    //my_blob1.fix(my_blob1.num_particles()-1);
     
     //my_blob.applyForce(b2Vec2(0, -10000.), 1);
     //my_blob.applyForce(b2Vec2(0, -10000.), 5);
@@ -89,11 +83,11 @@ int main()
         main_window->clear();
         
         world.Step(params::time_step, velocityIterations, positionIterations);
-
-        b_blob.update();
-        b_blob.solve_constraints();
-        b_blob.Draw(main_window);
-
+        
+        bone.update();
+        bone.solve_constraints();
+        bone.Draw(main_window);
+        
         main_window->draw(ground);
         main_window->display();
     }
