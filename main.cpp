@@ -44,7 +44,7 @@ int main(int argc, char* argv[])
     b2Vec2 center(75., 75.);
     b2Vec2 b_center(100., 130.);
     b2Vec2 b_dis(0.f, -0.001);
-    b2Vec2 b_force(0.f, -10.f);
+    b2Vec2 b_force(0.f, -0.001f);
     
     
     // Pointer to scenario since the class is abstract

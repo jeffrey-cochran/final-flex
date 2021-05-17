@@ -131,11 +131,13 @@ void fixture::addDisplacement(b2Vec2 dis) {
 // I wonder if this is moving everything down correctly
 void fixture::applyDisplacement() {
     if( this->displacements.size() > 0 ) {
+        b2Vec2 old_fixed_position = this->getPosition();
         b2Vec2 new_fixed_position = this->getPosition();
         for( const auto& dis : this->displacements ) {
             new_fixed_position += dis;
         }
         this->setPosition(new_fixed_position);
+        this->setLinearVelocity(params::inv_time_step*(new_fixed_position - old_fixed_position));
     }
     //
     // void

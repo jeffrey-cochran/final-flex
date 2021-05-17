@@ -78,8 +78,8 @@ VNotchBreak::VNotchBreak(int vn_width, int vn_height, int n_depth, int f_width,
 rect_(0, f_width, f_heigth, 0.0, f_center, sf::Color::Green, world)
 {
     vn_.fixLeftEdge();
-    rect_.addForce(f_force);
-    //rect_.addDisplacement(f_force); ?
+    // rect_.addForce(f_force);
+    rect_.addDisplacement(f_force);
 }
 
 void VNotchBreak::run(std::shared_ptr<sf::RenderWindow> window) {
@@ -88,8 +88,8 @@ void VNotchBreak::run(std::shared_ptr<sf::RenderWindow> window) {
     vn_.Draw(window);
     
     rect_.update();
-    rect_.applyForce();
-    //rect_.applyDisplacement(); ?
+    // rect_.applyForce();
+    rect_.applyDisplacement();
     rect_.Draw(window);
 };
 
