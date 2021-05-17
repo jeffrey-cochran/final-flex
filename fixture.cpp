@@ -39,7 +39,7 @@ fixture::fixture(int index,
     std::cout << "Num of vertices: " << sizeof(vertices) << std::endl;
     
     
-    this->physics_shape.Set(vertices, 4);
+    this->physics_shape.SetAsBox(width/2.f, height/2.f, pos, orientation); // Setting as this for now
     
     
     for (b2Vec2 v : this->physics_shape.m_vertices) {

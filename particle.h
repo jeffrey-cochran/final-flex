@@ -4,7 +4,6 @@
 #include <vector>
 #include <iostream>
 #include <SFML/Graphics.hpp>
-//#include "box2d/box2d.h"
 #include "utils.hpp"
 
 /// A solid circle shape
