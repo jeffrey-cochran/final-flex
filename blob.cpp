@@ -460,7 +460,7 @@ void blob::solve_constraints() {
 
 		//
 		// Solve link constraints
-		double strain_proxy_threshold = 0.5;
+		double strain_proxy_threshold = 0.1;
 		double biggest_strain_proxy = 0.0;
 		std::vector<std::pair<int,int>> links_with_excessive_strain;
 		for( auto& link_pair : this->links_ ) {

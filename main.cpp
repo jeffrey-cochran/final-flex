@@ -29,13 +29,13 @@ int main()
     b2Body* groundBody = world.CreateBody(&groundBodyDef);
 
     b2PolygonShape groundBox;
-    groundBox.SetAsBox(500.0f, 10.0f);
+    groundBox.SetAsBox(500.0f, 13.0f);
 
     groundBody->CreateFixture(&groundBox, 0.0f);
 
     sf::RectangleShape ground; 
     sf::Vector2f pos(0.0f, 197.0f);
-    sf::Vector2f size(1000.0, 1.0);
+    sf::Vector2f size(1000.0, 3.0);
     ground.setSize(size);
     ground.setPosition(pos);
     ground.setOutlineColor(sf::Color::White);
