@@ -18,7 +18,7 @@ bool b2ContactFilter::ShouldCollide( b2Fixture* fixtureA, b2Fixture* fixtureB ) 
 
 	bool should_collide = true;
 	if( fix_a_data && fix_b_data) {
-		std::cout << "Has flags: " << fix_a_data->w_flags << std::endl;
+		std::cout << "Friends: " << fix_a_data->w_flags->size() << std::endl;
 		should_collide = (
 			fix_a_data->w_flags->count(fix_b_data->flag_id) == 0
 		) || (
