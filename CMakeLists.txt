@@ -61,6 +61,9 @@ target_sources(final_flex PUBLIC ${CMAKE_CURRENT_LIST_DIR}/SphereBVH.cpp)
 target_sources(final_flex PUBLIC ${CMAKE_CURRENT_LIST_DIR}/StrainLink.cpp)
 target_sources(final_flex PUBLIC ${CMAKE_CURRENT_LIST_DIR}/utils.cpp)
 target_sources(final_flex PUBLIC ${CMAKE_CURRENT_LIST_DIR}/blob.cpp)
+target_sources(final_flex PUBLIC ${CMAKE_CURRENT_LIST_DIR}/scenario.cpp)
+target_sources(final_flex PUBLIC ${CMAKE_CURRENT_LIST_DIR}/fixture.cpp)
+
 
 #
 # box2d

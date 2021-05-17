@@ -9,7 +9,6 @@
 #include "box2d/box2d.h"
 #include "utils.hpp"
 
-
 /// A solid circle shape
 class particle
 {

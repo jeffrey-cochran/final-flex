@@ -252,8 +252,14 @@ bracket::bracket(b2World& world,
 }
 
 void dogbone::fixTopShoulder() {
-    for (int i = 1; i <= shoulder_width_; i++) {
-        fix(num_particles_ - i);
+    for (int ind : top_shoulder_) {
+        fix(ind);
+    }
+}
+
+void dogbone::applyBottomStrain(b2Vec2 strain) {
+    for (int ind : bottom_shoulder_) {
+        applyStrain(strain, ind);
     }
 }
 
@@ -347,6 +353,9 @@ dogbone::dogbone(b2World& world,
                 b2Vec2 center(new_x, new_y);
                 
                 int index = particle_count;
+                if (down_depth == target_depth - 1) {
+                    bottom_shoulder_.push_back(index);
+                }
                 particle_count++;
                 
                 particle p(radius_, index, this->id_, center, color, world);
@@ -411,6 +420,9 @@ dogbone::dogbone(b2World& world,
                 b2Vec2 center(new_x, new_y);
                 
                 int index = particle_count;
+                if (up_height == target_height) {
+                    top_shoulder_.push_back(index);
+                }
                 particle_count++;
                 
                 particle p(radius_, index, this->id_, center, color, world);
@@ -500,9 +512,6 @@ void blob::solve_constraints() {
 	for( int m : this->forced_particles_ ) {
 		this->getParticle(m)->applyForce();
 	}
-
-
-
 }
 
 int blob::num_particles() {
@@ -540,6 +549,7 @@ void blob::constructBVHAndLinks() {
 
 // This stays the same for the base class
 void blob::fix(int k) {
+    this->particles_[k]->setColor(sf::Color::Red);
 	this->particles_[k]->invm = 0.;
 	this->particles_[k]->setFixedPosition(this->particles_[k]->getPosition());
     this->fixed_particles_.emplace_back(k);
@@ -553,6 +563,7 @@ void blob::applyForce(b2Vec2 force, int k) {
 
 void blob::applyStrain(b2Vec2 strain_vector, int k) {
 	this->particles_[k]->addStrain(strain_vector);
+    this->particles_[k]->setColor(sf::Color::Cyan);
 	this->fixed_particles_.emplace_back(k);
 }
 

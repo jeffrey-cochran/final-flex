@@ -8,6 +8,8 @@ namespace params{
     double strain_compliance = 1.;
     double normalized_strain_compliance = 1.;
     int constraint_iters = 1;
+    float friction = 1.;
+    float density = 1.;
 
 
     void setTimeStep(double in_time_step) {
@@ -28,5 +30,13 @@ namespace params{
 
     void setConstraintIters(int in_constraint_iters) {
         params::constraint_iters = in_constraint_iters;
+    }
+
+    void setFriction(float pf_friction) {
+        params::friction = pf_friction;
+    }
+
+    void setDensity(float pf_density) {
+        params::density = pf_density;
     }
 }

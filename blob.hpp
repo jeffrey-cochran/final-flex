@@ -135,12 +135,17 @@ public:
     
     void fixTopShoulder();
     
+    void applyBottomStrain(b2Vec2 strain);
+    
 private:
     int shoulder_width_;
     int shoulder_height_;
     int neck_height_;
     int neck_width_;
     int transition_length_;
+    
+    std::vector<int> top_shoulder_;
+    std::vector<int> bottom_shoulder_;
 };
 
 class vnotch : public blob {

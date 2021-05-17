@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include "box2d/box2d.h"
+#include "params.hpp"
 
 void particle::Draw(std::shared_ptr<sf::RenderWindow> main_window)
 {
@@ -46,9 +47,9 @@ particle::particle(
 
     b2FixtureDef fixtureDef;
     fixtureDef.shape = &physics_shape;
-    fixtureDef.density = 1.0f;
-    fixtureDef.friction = 0.3f; 
-    
+    fixtureDef.density = params::density;
+    fixtureDef.friction = params::friction;
+
     //
     // Set fixture userdataf
     FixtureUserData* pd = new FixtureUserData(
@@ -58,6 +59,7 @@ particle::particle(
     );
     
     fixtureDef.userData.pointer = reinterpret_cast<uintptr_t>(pd);
+
 
     this->body->CreateFixture(&fixtureDef);
 
