@@ -29,13 +29,13 @@ int main()
     b2Body* groundBody = world.CreateBody(&groundBodyDef);
 
     b2PolygonShape groundBox;
-    groundBox.SetAsBox(500.0f, 10.0f);
+    groundBox.SetAsBox(500.0f, 13.0f);
 
     groundBody->CreateFixture(&groundBox, 0.0f);
 
     sf::RectangleShape ground; 
     sf::Vector2f pos(0.0f, 197.0f);
-    sf::Vector2f size(1000.0, 1.0);
+    sf::Vector2f size(1000.0, 3.0);
     ground.setSize(size);
     ground.setPosition(pos);
     ground.setOutlineColor(sf::Color::White);
@@ -61,7 +61,7 @@ int main()
     dogbone bone(world, sf::Color::White, 35, 20, 55, 15, 10, 0.1, center_of_mass);
     bone.fixTopShoulder();
     
-    b2Vec2 strain(0.f, -1000.f);
+    b2Vec2 strain(0.f, -0.0001f);
     bone.applyBottomStrain(strain);
      
     int32 velocityIterations = 6;
