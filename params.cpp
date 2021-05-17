@@ -8,8 +8,11 @@ namespace params{
     double strain_compliance = 1.;
     double normalized_strain_compliance = 1.;
     int constraint_iters = 1;
-    float friction = 1.;
-    float density = 1.;
+    double friction = 1.;
+    double density = 1.;
+    double linear_damping = 20.;
+    double fracture_strain = 0.5;
+    double yield_strain = 0.04;
 
 
     void setTimeStep(double in_time_step) {

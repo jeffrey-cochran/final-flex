@@ -23,6 +23,7 @@ StrainLink::StrainLink(
 
     this->lambda = 0;
 
+    this->accumulated_plastic_strain = 0.;
 }
 
 b2Vec2 StrainLink::getVector() {
@@ -35,12 +36,13 @@ void StrainLink::update() {
 
 double StrainLink::update_position() {
 
-    float time_step = params::time_step;
-    float inv_time_step = params::inv_time_step;
-    float normalized_strain_compliance = params::normalized_strain_compliance;
-    float linear_damping = 10.;
-    float normalized_beta = pow(time_step,2.) * linear_damping;
-    float gamma = normalized_beta * normalized_strain_compliance * inv_time_step;
+    double yield_strain = params::yield_strain;
+    double time_step = params::time_step;
+    double inv_time_step = params::inv_time_step;
+    double normalized_strain_compliance = params::normalized_strain_compliance;
+    double linear_damping = params::linear_damping;
+    double normalized_beta = pow(time_step,2.) * linear_damping;
+    double gamma = normalized_beta * normalized_strain_compliance * inv_time_step;
 
     //
     // Get magnitude and direction of perfect
@@ -102,7 +104,16 @@ double StrainLink::update_position() {
     );
 
     //
-    return this->getStrain();
+    // Update plasticity
+    double current_elastic_strain = this->getStrain();
+    double current_plastic_strain = this->getPlasticStrain();
+    double total_strain = current_elastic_strain + current_plastic_strain;
+    double new_plastic_strain = current_elastic_strain - yield_strain;
+    if( new_plastic_strain > 0) {
+        this->accumulated_plastic_strain += new_plastic_strain;
+        this->rest_length *= (1. + new_plastic_strain);
+    }
+    return total_strain;
 };
 
 std::pair<int,int> StrainLink::getId() {
