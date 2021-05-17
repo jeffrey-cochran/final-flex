@@ -238,6 +238,7 @@ bracket::bracket(b2World& world,
                  sf::Color color,
                  int width,
                  int height,
+                 int thickness,
                  float particles_per_unit_length,
                  b2Vec2 center_of_mass,
                  float orientation,
@@ -248,70 +249,77 @@ bracket::bracket(b2World& world,
     // Compute number of particles
     int height_discretization = height * particles_per_unit_length;
     int width_discretization = width * particles_per_unit_length;
+    int thickness_discretization = thickness * particles_per_unit_length;
     
     current_x_ = center_of_mass.x - ((float)width / 2.) + radius_;
     current_y_ = center_of_mass.y + ((float)height / 2.) - radius_;
     
     int particle_count = 0;
-
+    int t_offset = (thickness_discretization - 1) / 2;
     for( int i = 0; i < width_discretization; i++ ) {
-        
-        float new_x = current_x_;
-        float new_y = current_y_ - (2.*radius_*i);
-        
-        //
-       // Create next particle
-       b2Vec2 center(
-           new_x,
-           new_y
-       );
-        
-        int index = particle_count;
-        particle_count++;
-        
-       particle p(
-           radius_,
-           index,
-           this->id_,
-           center,
-           color,
-           world
-       );
+        for (int j = -t_offset; j <= t_offset; j++) {
+            float new_x = current_x_ - (2.*radius_*j) - (2.*radius_*i);
+            float new_y = current_y_ - (2.*radius_*i);
+            
+            //
+           // Create next particle
+           b2Vec2 center(
+               new_x,
+               new_y
+           );
+            
+            int index = particle_count;
+            particle_count++;
+            
+           particle p(
+               radius_,
+               index,
+               this->id_,
+               center,
+               color,
+               world
+           );
 
 
-       std::shared_ptr<particle> pp = std::make_shared<particle>(p);
-       particles_.push_back(
-           pp
-       );
+           std::shared_ptr<particle> pp = std::make_shared<particle>(p);
+           particles_.push_back(
+               pp
+           );
+        }
+        
+        
     }
     
     for( int j = 1; j < height_discretization; j++ ) {
+        for (int t = -t_offset; t <= t_offset; t++) {
+            float new_x = current_x_ + (2.*radius_*j) - (2.*radius_*t);
+            float new_y = current_y_ - (2.*radius_*j);
+            
+            //
+           // Create next particle
+           b2Vec2 center(
+               new_x,
+               new_y
+           );
+            int index = particle_count;
+            particle_count++;
+            
+            particle p(
+               radius_,
+               index,
+               this->id_,
+               center,
+               color,
+               world
+            );
+            
+            std::shared_ptr<particle> pp = std::make_shared<particle>(p);
+            particles_.push_back(
+               pp
+            );
+        }
         
-        float new_x = current_x_ + (2.*radius_*j);
-        float new_y = current_y_;
         
-        //
-       // Create next particle
-       b2Vec2 center(
-           new_x,
-           new_y
-       );
-        int index = particle_count;
-        particle_count++;
-        
-        particle p(
-           radius_,
-           index,
-           this->id_,
-           center,
-           color,
-           world
-        );
-        
-        std::shared_ptr<particle> pp = std::make_shared<particle>(p);
-        particles_.push_back(
-           pp
-        );
     }
     
     constructBVHAndLinks();

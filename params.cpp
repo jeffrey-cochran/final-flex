@@ -8,11 +8,16 @@ namespace params{
     double strain_compliance = 1.;
     double normalized_strain_compliance = 1.;
     int constraint_iters = 1;
-    double friction = 1.;
-    double density = 1.;
+
     double linear_damping = 20.;
     double fracture_strain = 0.5;
     double yield_strain = 0.04;
+
+    double fixture_friction = 1.f;
+    double fixture_density = 1.f;
+
+    double particle_friction = 1.f;
+    double particle_density = 1.f;
 
 
     void setTimeStep(double in_time_step) {
@@ -31,15 +36,31 @@ namespace params{
         params::normalized_strain_compliance = params::strain_compliance * pow(params::inv_time_step, 2.);
     }
 
+    void setFractureStrain(double f_strain) {
+        params::fracture_strain = f_strain;
+    }
+
+    void setYieldStrain(double y_strain) {
+        params::yield_strain = y_strain;
+    };
+
     void setConstraintIters(int in_constraint_iters) {
         params::constraint_iters = in_constraint_iters;
     }
 
-    void setFriction(float pf_friction) {
-        params::friction = pf_friction;
+    void setFixtureFriction(float f_friction) {
+        params::fixture_friction = f_friction;
     }
 
-    void setDensity(float pf_density) {
-        params::density = pf_density;
+    void setFixtureDensity(float f_density) {
+        params::fixture_density = f_density;
+    }
+
+    void setParticleFriction(float p_friction) {
+        params::particle_friction = p_friction;
+    }
+
+    void setParticleDensity(float p_density) {
+        params::particle_density = p_density;
     }
 }
