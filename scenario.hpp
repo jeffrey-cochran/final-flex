@@ -5,6 +5,7 @@
 #include "blob.hpp"
 #include "SphereBVH.hpp"
 #include "StrainLink.hpp"
+#include "fixture.hpp"
 
 
 class Scenario {
@@ -46,6 +47,28 @@ public:
     
 private:
     dogbone bone_;
+};
+
+class VNotchBreak : public Scenario {
+public:
+    VNotchBreak(int vn_width,
+                int vn_height,
+                int n_depth,
+                int f_width,
+                int f_heigth,
+                b2Vec2 vn_center,
+                b2Vec2 f_center,
+                b2World& world,
+                b2Vec2 f_force,
+                float pd,
+                float ls,
+                float ds,
+                float ri);
+    
+    void run(std::shared_ptr<sf::RenderWindow> window);
+private:
+    vnotch vn_;
+    fixture rect_;
 };
 
 #endif

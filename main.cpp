@@ -1,14 +1,12 @@
-#include "blob.hpp"
 #include "params.hpp"
-#include "fixture.hpp"
 #include "scenario.hpp"
 
 
-int main()
+int main(int argc, char* argv[])
 {
     //
     // Create world
-    b2Vec2 gravity(0.0f, -0.f);
+    b2Vec2 gravity(0.0f, 0.f);
     b2World world(gravity);
 
     //
@@ -26,10 +24,6 @@ int main()
 
     b2PolygonShape groundBox;
     groundBox.SetAsBox(500.0f, 13.0f);
-    
-    for (b2Vec2 v : groundBox.m_vertices) {
-        std::cout << v.x << ", " << v.y << std::endl;
-    }
 
     groundBody->CreateFixture(&groundBox, 0.0f);
 
@@ -47,13 +41,23 @@ int main()
         "Dogbone"
     );
     
-    b2Vec2 center(100., 100.);
-    b2Vec2 strain(0.f, -0.005);
+    b2Vec2 center(75., 75.);
+    b2Vec2 b_center(100., 130.);
+    b2Vec2 b_dis(0.f, -0.001);
+    b2Vec2 b_force(0.f, -10.f);
     
+    
+    // Pointer to scenario since the class is abstract
+    // Also, char* argv[] has been added, which means you can pass in
+    // arguments. Arguments that let us change between Scenarios (although the logic)
+    // hasn't been implemented yet
     Scenario* test;
     
-    test = new DogboneStretch(45, 25, 25, 15, 10, center, strain, world, 0.2, 1.0, 1.0, 1.0);
+    // Use this call to test out Dogbone scenario
+    // Look at Scenario.cpp for details about the constructor
+    //test = new DogboneStretch(45, 25, 25, 15, 10, center, strain, world, 0.2, 1.0, 1.0, 1.0);
     
+    test = new VNotchBreak(65, 30, 1, 15, 15, center, b_center, world, b_force, 0.2, 1.0, 1.0, 1.0);
     
     int32 velocityIterations = 6;
     int32 positionIterations = 2;
@@ -72,6 +76,8 @@ int main()
         
         world.Step(params::time_step, velocityIterations, positionIterations);
         
+        // Running the scenario
+        // Check the run function of the scenario to see how I did this
         test->run(main_window);
         
         main_window->draw(ground);

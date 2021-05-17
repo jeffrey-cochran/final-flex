@@ -158,11 +158,15 @@ public:
            float particles_per_unit_length,
            b2Vec2 center_of_mass);
     
-    int getCenter();
+    void fixCenter();
+    void fixLeftEdge();
+    void fixRightEdge();
 private:
     int center_;
     // could potentially come in handy to fix the four corners
     std::vector<int> corners_;
+    std::vector<int> left_edge_;
+    std::vector<int> right_edge_;
 };
 
 class segment : public blob {

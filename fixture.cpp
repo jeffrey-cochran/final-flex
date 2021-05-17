@@ -121,3 +121,22 @@ void fixture::applyForce() {
         this->body->ApplyForceToCenter(force, true);
     }
 }
+
+// How can I use these?
+void fixture::addDisplacement(b2Vec2 dis) {
+    displacements.push_back(dis);
+}
+
+// This moves the square but it's not colliding.
+// I wonder if this is moving everything down correctly
+void fixture::applyDisplacement() {
+    if( this->displacements.size() > 0 ) {
+        b2Vec2 new_fixed_position = this->getPosition();
+        for( const auto& dis : this->displacements ) {
+            new_fixed_position += dis;
+        }
+        this->setPosition(new_fixed_position);
+    }
+    //
+    // void
+}

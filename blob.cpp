@@ -42,8 +42,16 @@ segment::segment(b2World& world,
 }
 
 
-int vnotch::getCenter() {
-    return center_;
+
+
+void vnotch::fixCenter() {
+    fix(center_);
+}
+
+void vnotch::fixLeftEdge() {
+    for (int ind : left_edge_) {
+        fix(ind);
+    }
 }
 
 vnotch::vnotch(b2World& world,
@@ -94,6 +102,10 @@ vnotch::vnotch(b2World& world,
             particle_count++;
             if (i == center_w && j == 0) {
                 center_ = index;
+            }
+            
+            if (i == 0) {
+                left_edge_.push_back(index);
             }
             particle p(
                 radius_,

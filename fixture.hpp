@@ -38,7 +38,8 @@ public:
     b2Vec2 getPreviousPosition();
     b2Vec2 getFixedPosition();
     
-    
+    void addDisplacement(b2Vec2 dis);
+    void applyDisplacement();
     
     double invm;
     
@@ -49,6 +50,7 @@ private:
     b2Vec2 current_position, previous_position, fixed_position;
     b2Vec2 velocity;
     std::vector<b2Vec2> forces;
+    std::vector<b2Vec2> displacements;
     int id;
 };
 
