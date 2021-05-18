@@ -33,7 +33,6 @@ particle::particle(
     
     b2Vec2 vis_pos = utils::phys2vis(phys_pos);
 
-    // physics_shape.m_p = phys_pos;
     physics_shape.m_radius = radius;
     
     this->rendering_shape.setRadius(radius);

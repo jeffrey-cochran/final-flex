@@ -45,8 +45,7 @@ public:
 	// Constructors
 	blob(
 		b2World& world,
-		sf::Color color, 
-		float particles_per_unit_length,
+		sf::Color color,
 		b2Vec2 center_of_mass
 	);
 
@@ -105,7 +104,6 @@ public:
               sf::Color color,
               int width,
               int height,
-              float particles_per_unit_length,
               b2Vec2 center_of_mass);
 };
 
@@ -116,10 +114,7 @@ public:
             int width,
             int height,
             int thickness,
-            float particles_per_unit_length,
-            b2Vec2 center_of_mass,
-            float orientation,
-            float density);
+            b2Vec2 center_of_mass);
 };
 
 class dogbone : public blob {
@@ -131,7 +126,6 @@ public:
             int neck_height,
             int neck_width,
             int transition_length,
-            float particles_per_unit_length,
             b2Vec2 center_of_mass);
     
     void fixTopShoulder();
@@ -156,7 +150,6 @@ public:
            int width,
            int height,
            int depth,
-           float particles_per_unit_length,
            b2Vec2 center_of_mass);
     
     void fixCenter();
@@ -188,7 +181,6 @@ public:
             sf::Color color,
             int c_radius,
             float percentage,
-            float particles_per_unit_length,
             b2Vec2 center_of_mass);
 };
 

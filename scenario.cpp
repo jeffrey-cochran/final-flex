@@ -1,47 +1,18 @@
 #include "scenario.hpp"
 #include "fixture.hpp"
 
-Scenario::Scenario(float particle_density,
-                   float link_stiffness,
-                   float damping_strength,
-                   float radius_influence) {
-    particle_density_ = particle_density;
-    link_stiffness_ = link_stiffness;
-    damping_strength_ = damping_strength;
-    radius_influence_ = radius_influence;
+
+Scenario::Scenario() {
+    
 }
-/**
- shoulder_width: width of the dogbone shoulder (usually 35, 45, 55)
- shoulder_height: height of the dogbone shoulder (usually 25, 35)
- neck_height: height of the neck of the dogbone (usually 55)
- neck_width: width of the neck of the dogbone (usually 15, 25)
- transition_length: length of transition between neck and shoulder (usually 2, 3) (still working on the sloping transition)
- center_of_mass: center of mass for the dogbone itself
- bottom_strain: strain to be applied to the bottom particles
- particle_density: density of particles (usually 0.2, 0.4, 0.6)
- link_stiffness: not yet included
- damping_stiffness: not yet included
- radius_influence: not yet included
- */
-DogboneStretch::DogboneStretch(int shoulder_width,
-                               int shoulder_height,
-                               int neck_height,
-                               int neck_width,
-                               int transition_length,
-                               b2Vec2 center_of_mass,
-                               b2Vec2 bottom_strain,
-                               b2World& world,
-                               float particle_density,
-                               float link_stiffness,
-                               float damping_strength,
-                               float radius_influence)
-: Scenario(particle_density, link_stiffness, damping_strength, radius_influence),
-bone_(world, sf::Color::White, shoulder_width, shoulder_height, neck_height, neck_width,
-      transition_length, particle_density, center_of_mass)
+
+DogboneStretch::DogboneStretch(struct ScenarioData* data, b2World& world)
+: bone_(world, sf::Color::White, data->shoulder_width, data->shoulder_height, data->neck_height, data->neck_width,
+      data->transition_length, data->center_of_mass)
 {
     
     bone_.fixTopShoulder();
-    bone_.applyBottomStrain(bottom_strain);
+    bone_.applyBottomStrain(b2Vec2(0.f, data->down_strain));
 }
 
 void DogboneStretch::run(std::shared_ptr<sf::RenderWindow> window) {
@@ -50,42 +21,12 @@ void DogboneStretch::run(std::shared_ptr<sf::RenderWindow> window) {
     bone_.Draw(window);
 }
 
-/**
- vn_width: width of the vnotch block
- vn_height: height of the vnotch block
- n_depth: depth of the vnotch itself (usually around 1 or 2)
- f_width: the width of the box to be pushed down
- f_height: the height of the box to be pushed down
- vn_center: center of mass for the vnotch block
- f_center: center of mass for the block to be pushed down
- f_force: force (or eventually displacement) to be added to the block
- pd: particle_density (usually 0.2)
- ls: link stiffness (not yet implemented)
- ds: damping_stiffness (not yet implemented)
- ri: radius influence (not yet implemented)
- 
- 
- This will apply a force to the block, but we don't want a force, but a strain like displacement
- like how we did with fixed particles in blob. For some reason, I can't get the box to collide if I
- specify a displacement.
- 
- Take a look at addDisplacement and applyDisplacement in fixture.cpp
- */
-VNotchBreak::VNotchBreak(int vn_width,
-                         int vn_height,
-                         int n_depth,
-                         b2Vec2 vn_center,
-                         b2Vec2 strain,
-                         b2World& world,
-                         float pd,
-                         float ls,
-                         float ds,
-                         float ri)
-: Scenario(pd, ls, ds, ri), vn_(world, sf::Color::White, vn_width, vn_height, n_depth, pd, vn_center)
+VNotchBreak::VNotchBreak(struct ScenarioData* data, b2World& world)
+: vn_(world, sf::Color::White, data->width, data->height, data->n_depth, data->center_of_mass)
 {
     vn_.fixLeftTopEdge();
     vn_.fixLeftBottomEdge();
-    vn_.applyRightStrain(strain);
+    vn_.applyRightStrain(b2Vec2(0.f, data->down_strain));
 }
 
 void VNotchBreak::run(std::shared_ptr<sf::RenderWindow> window) {
@@ -93,4 +34,39 @@ void VNotchBreak::run(std::shared_ptr<sf::RenderWindow> window) {
     vn_.solve_constraints();
     vn_.Draw(window);
 };
+
+LBracketBreak::LBracketBreak(struct ScenarioData* data, b2World& world)
+: lbracket_(world, sf::Color::White, data->width, data->height, data->thickness, data->center_of_mass),
+b1_(0, data->b_w, data->b_h, data->orientation, data->b1_c, sf::Color::Green, world),
+b2_(1, data->b_w, data->b_h, data->orientation, data->b2_c,  sf::Color::Green, world),
+b3_(2, data->b_w, data->b_h, data->orientation, data->b3_c, sf::Color::Green, world),
+b4_(3, data->b_w, data->b_h, data->orientation, data->b4_c, sf::Color::Green, world)
+{
+    b1_.addDisplacement(b2Vec2(0.f, data->down_strain));
+    b2_.addDisplacement(b2Vec2(0.f, data->down_strain));
+    b3_.addDisplacement(b2Vec2(0.f, -data->down_strain));
+    b4_.addDisplacement(b2Vec2(0.f, -data->down_strain));
+}
+
+void LBracketBreak::run(std::shared_ptr<sf::RenderWindow> window) {
+    lbracket_.update();
+    lbracket_.solve_constraints();
+    lbracket_.Draw(window);
+    
+    b1_.update();
+    b1_.applyDisplacement();
+    b1_.Draw(window);
+    
+    b2_.update();
+    b2_.applyDisplacement();
+    b2_.Draw(window);
+    
+    b3_.update();
+    b3_.applyDisplacement();
+    b3_.Draw(window);
+    
+    b4_.update();
+    b4_.applyDisplacement();
+    b4_.Draw(window);
+}
 

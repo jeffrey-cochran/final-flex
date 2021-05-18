@@ -19,6 +19,29 @@ namespace params{
     double particle_friction = 1.f;
     double particle_density = 1.f;
 
+    float particles_per_unit_length = 0.2;
+    double link_stiffness = 1.f;
+    double damping_strength = 1.f;
+    double radius_influence = 1.f;
+
+    void setLinearDamping(double ld) {
+        params::linear_damping = ld;
+    }
+
+    void setLinkStiffness(double ls) {
+        params::link_stiffness = ls;
+    }
+    void setDampingStrength(double ds) {
+        params::damping_strength = ds;
+    }
+    void setRadiusInfluence(double ri) {
+        params::radius_influence = ri;
+    }
+
+    void setParticlePerUnitLength(float ppul) {
+        params::particles_per_unit_length = ppul;
+    }
+
 
     void setTimeStep(double in_time_step) {
         assert(in_time_step > 0.);
