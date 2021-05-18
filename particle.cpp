@@ -25,6 +25,9 @@ particle::particle(
     sf::Color color,
     b2World& world
 ) {
+    std::map<std::pair<int,int>, bool> temp_map;
+    this->white_flags = std::make_shared<std::map<std::pair<int,int>, bool>>( temp_map );
+
     id = in_id;
 
     current_position.Set(phys_pos.x, phys_pos.y);
@@ -52,7 +55,7 @@ particle::particle(
     //
     // Set fixture userdataf
     FixtureUserData* pd = new FixtureUserData(
-        std::make_shared<std::set<std::pair<int,int>>>(this->white_flags),
+        this->white_flags,
         in_body_index,
         in_id
     );

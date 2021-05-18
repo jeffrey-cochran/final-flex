@@ -61,8 +61,8 @@ class particle
         b2Vec2 velocity;
         std::vector<b2Vec2> forces;
         std::vector<b2Vec2> strains;
-        std::set<std::pair<int,int>> white_flags;
-        FixtureUserData* collision_data; 
+        std::shared_ptr<std::map<std::pair<int,int>, bool>> white_flags;
+        std::shared_ptr<FixtureUserData> collision_data; 
         int id;
 };
 
@@ -79,11 +79,14 @@ inline void particle::addStrain(b2Vec2 strain_vector) {
 }
 
 inline void particle::addWhiteFlag(int body_id, int particle_id) {
-    this->white_flags.insert(std::pair(body_id, particle_id));
+    this->white_flags->insert({
+        std::pair(body_id, particle_id),
+        true
+    });
 }
 
 inline void particle::removeWhiteFlag(int body_id, int particle_id) {
-    this->white_flags.erase(std::pair(body_id, particle_id));
+    this->white_flags->erase(std::pair(body_id, particle_id));
 }
 
 #endif
