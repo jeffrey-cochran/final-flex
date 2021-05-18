@@ -7,16 +7,16 @@ namespace params{
     double inv_time_step = 1.;
     double strain_compliance = 1.;
     double normalized_strain_compliance = 1.;
-    int constraint_iters = 1;
+    int constraint_iters = 2;
 
-    double linear_damping = 20.;
+    double linear_damping = 10.;
     double fracture_strain = 0.5;
     double yield_strain = 0.04;
 
     double fixture_friction = 1.f;
-    double fixture_density = 1.f;
+    double fixture_density = 100.f;
 
-    double particle_friction = 1.f;
+    double particle_friction = 0.1f;
     double particle_density = 1.f;
 
     float particles_per_unit_length = 0.2;
@@ -47,12 +47,12 @@ namespace params{
         assert(in_time_step > 0.);
         params::time_step = in_time_step;
         params::inv_time_step = 1./in_time_step;
-        void updateNormalizedCompliances();
+        updateNormalizedCompliances();
     }
 
     void setStrainCompliance(double in_strain_compliance) {
         params::strain_compliance = in_strain_compliance;
-        void updateNormalizedCompliances();
+        updateNormalizedCompliances();
     }
 
     void updateNormalizedCompliances() {

@@ -125,7 +125,7 @@ int main(int argc, char* argv[])
         main_window->display();
     }
     sf::Time elapsed1 = clock.getElapsedTime();
-    std::cout << elapsed1.asSeconds() << std::endl;
+    // std::cout << elapsed1.asSeconds() << std::endl;
 
     return 0;
 }

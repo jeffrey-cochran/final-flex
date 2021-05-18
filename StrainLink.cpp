@@ -40,6 +40,8 @@ double StrainLink::update_position() {
     double time_step = params::time_step;
     double inv_time_step = params::inv_time_step;
     double normalized_strain_compliance = params::normalized_strain_compliance;
+    // std::cout << normalized_strain_compliance << std::endl;
+    
     double linear_damping = params::linear_damping;
     double normalized_beta = pow(time_step,2.) * linear_damping;
     double gamma = normalized_beta * normalized_strain_compliance * inv_time_step;
@@ -50,22 +52,6 @@ double StrainLink::update_position() {
     b2Vec2 direction = this->getVector();
     double magnitude = direction.Length() - this->rest_length;
     direction.Normalize();
-    
-
-	// double linear_damping = 0.0005;
-	// for( auto& link_pair : this->links_ ) {
-	// 	b2Vec2 prev_v_a =link_pair.second->getParticleA()->getLinearVelocity();
-	// 	b2Vec2 prev_v_b =link_pair.second->getParticleB()->getLinearVelocity();
-	// 	b2Vec2 velocity_impulse = (1./(link_pair.second->getParticleB()->invm + link_pair.second->getParticleA()->invm)) * (prev_v_b - prev_v_a);
-
-	// 	link_pair.second->getParticleA()->setLinearVelocity( 
-	// 		prev_v_a + linear_damping * velocity_impulse
-	// 	);
-	// 	link_pair.second->getParticleB()->setLinearVelocity( 
-	// 		prev_v_b - linear_damping * velocity_impulse
-	// 	);
-	// }
-
 
     //
     // Update particle positions

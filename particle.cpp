@@ -51,16 +51,17 @@ particle::particle(
     fixtureDef.shape = &physics_shape;
     fixtureDef.density = params::particle_density;
     fixtureDef.friction = params::particle_friction;
+    // fixtureDef.filter.groupIndex = -1*in_body_index;
 
     //
     // Set fixture userdataf
-    FixtureUserData* pd = new FixtureUserData(
-        this->white_flags,
-        in_body_index,
-        in_id
-    );
+    // FixtureUserData* pd = new FixtureUserData(
+    //     this->white_flags,
+    //     in_body_index,
+    //     in_id
+    // );
     
-    fixtureDef.userData.pointer = reinterpret_cast<uintptr_t>(pd);
+    // fixtureDef.userData.pointer = reinterpret_cast<uintptr_t>(pd);
 
 
     this->body->CreateFixture(&fixtureDef);

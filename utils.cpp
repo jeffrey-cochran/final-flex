@@ -12,18 +12,15 @@ namespace utils {
 
 }
 
-bool b2ContactFilter::ShouldCollide( b2Fixture* fixtureA, b2Fixture* fixtureB ) {
-	FixtureUserData* fix_a_data = (FixtureUserData*) fixtureA->GetUserData().pointer;
-	FixtureUserData* fix_b_data = (FixtureUserData*) fixtureB->GetUserData().pointer;
+// bool b2ContactFilter::ShouldCollide( b2Fixture* fixtureA, b2Fixture* fixtureB ) {
+// 	FixtureUserData* fix_a_data = (FixtureUserData*) fixtureA->GetUserData().pointer;
+// 	FixtureUserData* fix_b_data = (FixtureUserData*) fixtureB->GetUserData().pointer;
 
-	bool should_collide = true;
-	if( fix_a_data && fix_b_data) {
-		std::cout << "Friends: " << fix_a_data->w_flags->size() << std::endl;
-		should_collide = (
-			fix_a_data->w_flags->count(fix_b_data->flag_id) == 0
-		) || (
-			fix_b_data->w_flags->count(fix_a_data->flag_id) == 0
-		);
-	}
-	return should_collide;
-}
+// 	if( fix_a_data && fix_b_data) {
+// 		return (
+// 			fix_a_data->w_flags->count(fix_b_data->flag_id) == 0 && fix_b_data->w_flags->count(fix_a_data->flag_id) == 0
+// 		);
+// 	} else {
+// 		return true;
+// 	}
+// }
