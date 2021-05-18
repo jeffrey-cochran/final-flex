@@ -6,43 +6,19 @@
 #include "SphereBVH.hpp"
 #include "StrainLink.hpp"
 #include "fixture.hpp"
+#include "ScenarioData.hpp"
 
 
 class Scenario {
 public:
-    Scenario(float particle_density,
-             float link_stiffness,
-             float damping_strength,
-             float radius_influence);
-    
-    
+    Scenario();
     virtual void run(std::shared_ptr<sf::RenderWindow> window) = 0;
-   
-    
     void evaluate(float time_step);
-protected:
-    float particle_density_;
-    float link_stiffness_;
-    float damping_strength_;
-    float radius_influence_;
-    
 };
 
 class DogboneStretch : public Scenario {
 public:
-    DogboneStretch(int shoulder_width,
-                   int shoulder_height,
-                   int neck_height,
-                   int neck_width,
-                   int transition_length,
-                   b2Vec2 center_of_mass,
-                   b2Vec2 bottom_strain,
-                   b2World& world,
-                   float particle_density,
-                   float link_stiffness,
-                   float damping_strength,
-                   float radius_influence);
-    
+    DogboneStretch(struct ScenarioData* data, b2World& world);
     void run(std::shared_ptr<sf::RenderWindow> window);
     
 private:
@@ -51,20 +27,21 @@ private:
 
 class VNotchBreak : public Scenario {
 public:
-    VNotchBreak(int vn_width,
-                int vn_height,
-                int n_depth,
-                b2Vec2 vn_center,
-                b2Vec2 strain,
-                b2World& world,
-                float pd,
-                float ls,
-                float ds,
-                float ri);
+    VNotchBreak(struct ScenarioData* data, b2World& world);
     
     void run(std::shared_ptr<sf::RenderWindow> window);
 private:
     vnotch vn_;
+};
+
+class LBracketBreak : public Scenario {
+public:
+    LBracketBreak(struct ScenarioData* data, b2World& world);
+    void run(std::shared_ptr<sf::RenderWindow> window);
+    
+private:
+    bracket lbracket_;
+    fixture b1_, b2_, b3_, b4_;
 };
 
 #endif

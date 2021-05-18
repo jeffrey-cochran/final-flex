@@ -9,13 +9,12 @@
 
 blob::blob(b2World& world,
            sf::Color color,
-           float particles_per_unit_length,
            b2Vec2 center_of_mass)
 {
     
     //
     // Get particle attributes
-    radius_ = 0.5 / (float)particles_per_unit_length;
+    radius_ = 0.5 / (float)params::particles_per_unit_length;
     
     //
     // Set center of mass
@@ -32,10 +31,9 @@ segment::segment(b2World& world,
                  sf::Color color,
                  int c_radius,
                  float percentage,
-                 float particles_per_unit_length,
                  b2Vec2 center_of_mass)
-: blob(world, color, particles_per_unit_length, center_of_mass) {
-    int radius = c_radius * particles_per_unit_length;
+: blob(world, color, center_of_mass) {
+    int radius = c_radius * params::particles_per_unit_length;
     std::cout << "Radius of cirlce (in little blobs): " << radius << std::endl;
     int c_length = std::round((2 * M_PI * radius));
     std::cout << "C_Length: " << c_length << std::endl;
@@ -101,12 +99,11 @@ vnotch::vnotch(b2World& world,
     int width,
     int height,
     int depth,
-    float particles_per_unit_length,
     b2Vec2 center_of_mass)
-: blob(world, color, particles_per_unit_length, center_of_mass) {
+: blob(world, color, center_of_mass) {
     
-    int height_discretization = height * particles_per_unit_length;
-    int width_discretization = width * particles_per_unit_length;
+    int height_discretization = height * params::particles_per_unit_length;
+    int width_discretization = width * params::particles_per_unit_length;
     
     current_x_ = center_of_mass.x - ((float)width / 2.) + radius_;
     current_y_ = center_of_mass.y + ((float)height / 2.) - radius_;
@@ -191,14 +188,13 @@ rectangle::rectangle(b2World& world,
                      sf::Color color,
                      int width,
                      int height,
-                     float particles_per_unit_length,
                      b2Vec2 center_of_mass
-) : blob(world, color, particles_per_unit_length, center_of_mass)
+) : blob(world, color, center_of_mass)
 {
 	//
 	// Compute number of particles
-    int height_discretization = height * particles_per_unit_length;
-    int width_discretization = width * particles_per_unit_length;
+    int height_discretization = height * params::particles_per_unit_length;
+    int width_discretization = width * params::particles_per_unit_length;
 	
     current_x_ = center_of_mass.x - ((float)width / 2.) + radius_;
 	current_y_ = center_of_mass.y + ((float)height / 2.) - radius_;
@@ -239,17 +235,14 @@ bracket::bracket(b2World& world,
                  int width,
                  int height,
                  int thickness,
-                 float particles_per_unit_length,
-                 b2Vec2 center_of_mass,
-                 float orientation,
-                 float density)
-: blob(world, color, particles_per_unit_length, center_of_mass)
+                 b2Vec2 center_of_mass)
+: blob(world, color, center_of_mass)
 {
     //
     // Compute number of particles
-    int height_discretization = height * particles_per_unit_length;
-    int width_discretization = width * particles_per_unit_length;
-    int thickness_discretization = thickness * particles_per_unit_length;
+    int height_discretization = height * params::particles_per_unit_length;
+    int width_discretization = width * params::particles_per_unit_length;
+    int thickness_discretization = thickness * params::particles_per_unit_length;
     
     current_x_ = center_of_mass.x - ((float)width / 2.) + radius_;
     current_y_ = center_of_mass.y + ((float)height / 2.) - radius_;
@@ -345,17 +338,16 @@ dogbone::dogbone(b2World& world,
                  int neck_height,
                  int neck_width,
                  int transition_length,
-                 float particles_per_unit_length,
                  b2Vec2 center_of_mass)
-    : blob(world, color, particles_per_unit_length, center_of_mass) {
+    : blob(world, color, center_of_mass) {
         
         //
         // Compute number of particles
-        shoulder_width_ = shoulder_width * particles_per_unit_length;
-        shoulder_height_ = shoulder_height * particles_per_unit_length;
-        neck_height_ = neck_height * particles_per_unit_length;
-        neck_width_ = neck_width * particles_per_unit_length;
-        transition_length_ = transition_length * particles_per_unit_length;
+        shoulder_width_ = shoulder_width * params::particles_per_unit_length;
+        shoulder_height_ = shoulder_height * params::particles_per_unit_length;
+        neck_height_ = neck_height * params::particles_per_unit_length;
+        neck_width_ = neck_width * params::particles_per_unit_length;
+        transition_length_ = transition_length * params::particles_per_unit_length;
         
         int height = 2*shoulder_height_ + 2*transition_length_ + neck_height_;
         int width = shoulder_width_;

@@ -1,9 +1,13 @@
 #include "params.hpp"
 #include "scenario.hpp"
+#include "ScenarioData.hpp"
 
 
 int main(int argc, char* argv[])
 {
+    
+    
+    
     //
     // Create world
     b2Vec2 gravity(0.0f, 0.f);
@@ -11,21 +15,30 @@ int main(int argc, char* argv[])
 
     //
     // Set simulation parameters
-    double timeStep = 1.0 / 600.;
-    double strain_compliance = 1.e-6;
-    double f_strain = 0.1;
-    double y_strain = 0.03;
+    char* scenario = argv[1];
+    float particles_per_unit_length = atof(argv[2]);
+    float timeStep = atof(argv[3]) / 600.f;
+    float strain_compliance = atof(argv[4]);
+    double f_strain = atof(argv[5]);
+    double y_strain = atof(argv[6]);
+    double linear_damping = atof(argv[7]);
+    int constraint_iters = atoi(argv[8]);
     
-    double fixture_friction = 10.f;
-    double fixture_density = 1000.f;
-    params::setFixtureFriction(fixture_friction);
-    params::setFixtureDensity(fixture_density);
-    
+    params::setParticlePerUnitLength(particles_per_unit_length);
     params::setTimeStep(timeStep);
     params::setStrainCompliance(strain_compliance);
     params::setFractureStrain(f_strain);
     params::setYieldStrain(y_strain);
-
+    params::setLinearDamping(linear_damping);
+    params::setConstraintIters(constraint_iters);
+    
+    float fixture_friction = 10.f;
+    float fixture_density = 10.f;
+    params::setParticlePerUnitLength(particles_per_unit_length);
+    params::setFixtureFriction(fixture_friction);
+    params::setFixtureDensity(fixture_density);
+    
+    // Create ground box
     b2BodyDef groundBodyDef;
     groundBodyDef.position.Set(0.0f, -10.0f);
 
@@ -50,43 +63,43 @@ int main(int argc, char* argv[])
         "Dogbone"
     );
     
-    b2Vec2 center(120., 100.);
-    b2Vec2 b1_center(117., 140.);
-    b2Vec2 b2_center(65., 140);
-    b2Vec2 b3_center(45., 45);
-    b2Vec2 b4_center(137., 45);
-    
-    b2Vec2 b1_dis(0.f, -0.001);
-    b2Vec2 b2_dis(0.f, -0.001);
-    b2Vec2 b3_dis(0.f, 0.001);
-    b2Vec2 b4_dis(0.f, 0.001);
-    
-    int b_w = 15;
-    int b_h = 15;
-    
+    b2Vec2 center;
     
     // Pointer to scenario since the class is abstract
     // Also, char* argv[] has been added, which means you can pass in
     // arguments. Arguments that let us change between Scenarios (although the logic)
     // hasn't been implemented yet
+    struct ScenarioData sData = ScenarioData();
     Scenario* test;
     
-    // Use this call to test out Dogbone scenario
-    // Look at Scenario.cpp for details about the constructor
-    //test = new DogboneStretch(45, 25, 25, 15, 10, center, strain, world, 0.2, 1.0, 1.0, 1.0);
+    if (strcmp(scenario, "lbracket") == 0) {
+        center = b2Vec2(120., 100.);
+        sData.center_of_mass = center;
+        sData.width = 60;
+        sData.height = 60;
+        sData.thickness = 15;
+        
+        test = new LBracketBreak(&sData, world);
+    } else if (strcmp(scenario, "vnotch") == 0) {
+        center = b2Vec2(100., 100.);
+        sData.center_of_mass = center;
+        sData.width = 80;
+        sData.height = 30;
+        sData.n_depth = 3;
+        
+        test = new VNotchBreak(&sData, world);
+    } else {
+        center = b2Vec2(100., 100.);
+        sData.down_strain = -0.001;
+        sData.center_of_mass = center;
+        sData.shoulder_width = 35;
+        sData.shoulder_height = 20;
+        sData.neck_height = 45;
+        sData.neck_width = 25;
+        sData.transition_length = 10;
+        test = new DogboneStretch(&sData, world);
+    }
     
-    //test = new VNotchBreak(75, 30, 6, center, b_dis, world, 0.6, 1.0, 1.0, 1.0);
-    
-    bracket LBracket(world, sf::Color::White, 60, 60, 15, 0.4, center, 0.0, 0.0);
-    fixture b1(0, b_w, b_h, 45.0, b1_center, sf::Color::Green, world);
-    fixture b2(1, b_w, b_h, 45.0, b2_center, sf::Color::Green, world);
-    fixture b3(2, b_w, b_h, 45.0, b3_center, sf::Color::Green, world);
-    fixture b4(3, b_w, b_h, 45.0, b4_center, sf::Color::Green, world);
-    
-    b1.addDisplacement(b1_dis);
-    b2.addDisplacement(b2_dis);
-    b3.addDisplacement(b3_dis);
-    b4.addDisplacement(b4_dis);
     
     int32 velocityIterations = 6;
     int32 positionIterations = 2;
@@ -105,26 +118,7 @@ int main(int argc, char* argv[])
         
         world.Step(params::time_step, velocityIterations, positionIterations);
         
-        //test->run(main_window);
-        LBracket.update();
-        LBracket.solve_constraints();
-        LBracket.Draw(main_window);
-        
-        b1.update();
-        b1.applyDisplacement();
-        b1.Draw(main_window);
-        
-        b2.update();
-        b2.applyDisplacement();
-        b2.Draw(main_window);
-        
-        b3.update();
-        b3.applyDisplacement();
-        b3.Draw(main_window);
-        
-        b4.update();
-        b4.applyDisplacement();
-        b4.Draw(main_window);
+        test->run(main_window);
     
         
         main_window->draw(ground);

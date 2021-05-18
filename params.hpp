@@ -17,6 +17,17 @@ namespace params {
     extern double particle_friction;
     extern double particle_density;
 
+    extern float particles_per_unit_length;
+    extern double link_stiffness;
+    extern double damping_strength;
+    extern double radius_influence;
+
+    void setLinkStiffness(double ls);
+    void setDampingStrength(double ds);
+    void setRadiusInfluence(double ri);
+
+    void setParticlePerUnitLength(float ppul);
+
     void setTimeStep(double in_time_step);
     void setStrainCompliance(double in_strain_compliance);
     void updateNormalizedCompliances();
@@ -29,6 +40,8 @@ namespace params {
 
     void setParticleFriction(float p_friction);
     void setParticleDensity(float p_Density);
+
+    void setLinearDamping(double ld);
 }
 
 #endif
