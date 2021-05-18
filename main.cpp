@@ -11,13 +11,13 @@ int main(int argc, char* argv[])
 
     //
     // Set simulation parameters
-    float timeStep = 1.0f / 600.f;
-    float strain_compliance = 0.1;
+    double timeStep = 1.0 / 600.;
+    double strain_compliance = 1.e-6;
     double f_strain = 0.1;
-    double y_strain = 0.1;
+    double y_strain = 0.03;
     
-    float fixture_friction = 10.f;
-    float fixture_density = 10.f;
+    double fixture_friction = 10.f;
+    double fixture_density = 1000.f;
     params::setFixtureFriction(fixture_friction);
     params::setFixtureDensity(fixture_density);
     
@@ -131,7 +131,7 @@ int main(int argc, char* argv[])
         main_window->display();
     }
     sf::Time elapsed1 = clock.getElapsedTime();
-    std::cout << elapsed1.asSeconds() << std::endl;
+    // std::cout << elapsed1.asSeconds() << std::endl;
 
     return 0;
 }

@@ -550,6 +550,7 @@ void blob::solve_constraints() {
 				links_with_excessive_strain.push_back(link_pair.first);
 			}			
 		}
+        std::cout << biggest_strain_proxy << std::endl;
 
 		//
 		// Delete broken links
@@ -606,7 +607,7 @@ void blob::constructBVHAndLinks() {
     for( std::shared_ptr<particle> p : particles_ ) {
 
         SphereNode sphere_of_influence(p);
-        sphere_of_influence.bounding_volume.radius *= 2.;
+        sphere_of_influence.bounding_volume.radius *= 2;
         auto li = sphere_bvh_->intersects(sphere_of_influence);
 
         for( int j : li ) {
